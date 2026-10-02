@@ -1,0 +1,6060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>AMA1751 Linear Algebra — Determinant Explorer</title>
+
+  <meta
+    name="description"
+    content="Interactive determinant learning activities for AMA1751 Linear Algebra."
+  >
+
+  <style>
+    :root {
+      --poly-red: #a6192e;
+      --poly-red-dark: #7f1022;
+
+      --navy: #213a78;
+      --blue: #3157b7;
+      --blue-light: #eaf0ff;
+
+      --purple: #6d28d9;
+      --purple-light: #f2ebff;
+
+      --green: #059669;
+      --green-light: #ecfdf5;
+
+      --orange: #ea8a00;
+      --orange-light: #fff7e8;
+
+      --cyan: #0284c7;
+      --pink: #db2777;
+
+      --ink: #172033;
+      --muted: #64748b;
+      --soft: #f4f6fa;
+      --panel: #ffffff;
+      --border: #dbe3ee;
+      --grid: #e7edf5;
+
+      --good-bg: #ecfdf5;
+      --good-border: #86efac;
+      --good-ink: #166534;
+
+      --warn-bg: #fff7ed;
+      --warn-border: #fdba74;
+      --warn-ink: #9a3412;
+
+      --info-bg: #eff6ff;
+      --info-border: #93c5fd;
+      --info-ink: #1e40af;
+
+      --shadow: 0 10px 32px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, #e8efff 0, transparent 30rem),
+        var(--soft);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    select {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(49, 87, 183, 0.25);
+      outline-offset: 2px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    code {
+      padding: 2px 5px;
+      color: #4c1d95;
+      background: #f3e8ff;
+      border-radius: 5px;
+    }
+
+    /* ==========================================================
+       HEADER
+    ========================================================== */
+
+    .hero {
+      padding: 44px 24px 40px;
+      color: white;
+      background:
+        linear-gradient(
+          125deg,
+          rgba(166, 25, 46, 0.98),
+          rgba(33, 58, 120, 0.98)
+        );
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border: 45px solid rgba(255, 255, 255, 0.07);
+      border-radius: 50%;
+    }
+
+    .hero::before {
+      width: 310px;
+      height: 310px;
+      right: -80px;
+      top: -150px;
+    }
+
+    .hero::after {
+      width: 190px;
+      height: 190px;
+      right: 220px;
+      bottom: -155px;
+    }
+
+    .hero-inner {
+      width: min(1260px, 100%);
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      font-weight: 750;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(2.15rem, 5vw, 3.75rem);
+      line-height: 1.08;
+    }
+
+    .hero-description {
+      max-width: 900px;
+      margin: 16px 0 21px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      opacity: 0.95;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      padding: 5px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .page-shell {
+      width: min(1260px, calc(100% - 28px));
+      margin: 0 auto 55px;
+    }
+
+    /* ==========================================================
+       CORE FORMULA BANNER
+    ========================================================== */
+
+    .core-banner {
+      display: grid;
+      grid-template-columns: auto minmax(260px, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      margin: -20px auto 22px;
+      padding: 17px 21px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 4;
+    }
+
+    .core-label {
+      padding: 7px 13px;
+      color: white;
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .core-formula {
+      overflow-x: auto;
+      color: #172554;
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: clamp(1.15rem, 2.7vw, 1.65rem);
+      white-space: nowrap;
+    }
+
+    .core-conclusion {
+      padding: 7px 11px;
+      color: var(--poly-red-dark);
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      border-radius: 9px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================
+       NAVIGATION
+    ========================================================== */
+
+    .lesson-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+      margin: 22px 0;
+      padding: 7px;
+      background: #e7ecf4;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.07);
+      position: sticky;
+      top: 8px;
+      z-index: 20;
+    }
+
+    .lesson-tab {
+      min-height: 52px;
+      padding: 9px 11px;
+      color: #475569;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      font-weight: 770;
+      transition: 160ms ease;
+    }
+
+    .lesson-tab:hover {
+      color: var(--navy);
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .lesson-tab.active {
+      color: white;
+      background: linear-gradient(120deg, var(--navy), var(--blue));
+      box-shadow: 0 5px 14px rgba(33, 58, 120, 0.24);
+    }
+
+    .lesson-panel {
+      display: none;
+    }
+
+    .lesson-panel.active {
+      display: block;
+      animation: panel-in 220ms ease;
+    }
+
+    @keyframes panel-in {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ==========================================================
+       GENERAL LAYOUT
+    ========================================================== */
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin: 29px 0 17px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 7px;
+      color: var(--navy);
+      font-size: clamp(1.55rem, 4vw, 2.28rem);
+    }
+
+    .section-heading p {
+      max-width: 880px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .level-tag {
+      min-width: 106px;
+      padding: 7px 12px;
+      color: white;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 850;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .level-tag.basic {
+      background: var(--green);
+    }
+
+    .level-tag.intermediate {
+      background: var(--orange);
+    }
+
+    .level-tag.advanced {
+      background: var(--purple);
+    }
+
+    .level-tag.test {
+      background: var(--poly-red);
+    }
+
+    .callout {
+      margin-bottom: 18px;
+      padding: 13px 16px;
+      color: #334155;
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--orange);
+      border-radius: 10px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(285px, 0.72fr) minmax(0, 2fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .content-stack {
+      min-width: 0;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card,
+    .control-card,
+    .quiz-card,
+    .quiz-sidebar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card,
+    .control-card {
+      padding: 19px;
+    }
+
+    .control-card {
+      position: sticky;
+      top: 82px;
+    }
+
+    .card h3,
+    .control-card h3,
+    .quiz-card h3,
+    .quiz-sidebar h3 {
+      margin: 0 0 12px;
+      color: #263653;
+    }
+
+    .subheading {
+      margin: 22px 0 10px;
+      color: var(--navy);
+      font-size: 1.18rem;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .control-group {
+      margin-bottom: 18px;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    .field,
+    select {
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--navy);
+    }
+
+    .button-row,
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .button {
+      min-height: 40px;
+      padding: 8px 12px;
+      color: white;
+      background: var(--navy);
+      border: 1px solid var(--navy);
+      border-radius: 9px;
+      font-weight: 750;
+    }
+
+    .button:hover {
+      filter: brightness(1.08);
+    }
+
+    .button.secondary {
+      color: var(--navy);
+      background: white;
+    }
+
+    .button.danger {
+      color: #9f1239;
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    .button.purple {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      filter: none;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .segment {
+      min-height: 39px;
+      padding: 7px 9px;
+      color: #475569;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
+
+    .segment.active {
+      color: white;
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .three-column {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    /* ==========================================================
+       MATRICES
+    ========================================================== */
+
+    .matrix-holder {
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 5px;
+    }
+
+    .matrix {
+      display: inline-block;
+      padding: 5px 13px;
+      position: relative;
+      vertical-align: middle;
+    }
+
+    .matrix::before,
+    .matrix::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      border-top: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+    }
+
+    .matrix::before {
+      left: 0;
+      border-left: 2px solid currentColor;
+    }
+
+    .matrix::after {
+      right: 0;
+      border-right: 2px solid currentColor;
+    }
+
+    .matrix table {
+      border-collapse: separate;
+      border-spacing: 7px 5px;
+    }
+
+    .matrix td {
+      min-width: 32px;
+      padding: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .matrix-input {
+      width: 58px;
+      height: 38px;
+      padding: 5px;
+      color: #172554;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-align: center;
+    }
+
+    .matrix-input.invalid {
+      color: #9f1239;
+      background: #fff1f2;
+      border-color: #fb7185;
+    }
+
+    .display-matrix {
+      color: #172554;
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: 1.02rem;
+    }
+
+    .display-matrix.compact {
+      font-size: 0.9rem;
+    }
+
+    .matrix-equation {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 10px;
+      color: #172554;
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: 1.08rem;
+    }
+
+    /* ==========================================================
+       STATUS AND RESULTS
+    ========================================================== */
+
+    .status {
+      padding: 14px;
+      border: 1px solid;
+      border-radius: 11px;
+    }
+
+    .status strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .status.good {
+      color: var(--good-ink);
+      background: var(--good-bg);
+      border-color: var(--good-border);
+    }
+
+    .status.warn {
+      color: var(--warn-ink);
+      background: var(--warn-bg);
+      border-color: var(--warn-border);
+    }
+
+    .status.info {
+      color: var(--info-ink);
+      background: var(--info-bg);
+      border-color: var(--info-border);
+    }
+
+    .formula-box {
+      margin: 9px 0;
+      padding: 11px 13px;
+      overflow-x: auto;
+      color: #172554;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: 1.07rem;
+    }
+
+    .big-result {
+      color: var(--navy);
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: clamp(1.22rem, 3vw, 1.55rem);
+      font-weight: 800;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .metric-value {
+      margin-top: 3px;
+      color: var(--navy);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    /* ==========================================================
+       BASIC GEOMETRIC LAB
+    ========================================================== */
+
+    .vector-plot {
+      display: block;
+      width: 100%;
+      min-height: 350px;
+      aspect-ratio: 620 / 440;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .vector-handle {
+      cursor: grab;
+      pointer-events: all;
+    }
+
+    .vector-handle:active {
+      cursor: grabbing;
+    }
+
+    .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+      margin-top: 17px;
+    }
+
+    .fact-card {
+      padding: 16px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+    }
+
+    .fact-card h4 {
+      margin: 0 0 6px;
+      color: var(--navy);
+    }
+
+    .fact-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ==========================================================
+       COFACTOR LAB
+    ========================================================== */
+
+    .click-matrix td {
+      min-width: 62px;
+    }
+
+    .click-cell {
+      width: 58px;
+      height: 45px;
+      color: #172554;
+      background: white;
+      border: 2px solid #dbe3ee;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 800;
+      transition: 140ms ease;
+    }
+
+    .click-cell:hover {
+      border-color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .click-cell.minor-cell {
+      color: #166534;
+      background: #ecfdf5;
+      border-color: #86efac;
+    }
+
+    .click-cell.deleted {
+      color: #94a3b8;
+      background:
+        linear-gradient(
+          145deg,
+          transparent 44%,
+          #f43f5e 46%,
+          #f43f5e 53%,
+          transparent 55%
+        ),
+        #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .click-cell.selected {
+      color: #7c2d12;
+      background: #ffedd5;
+      border-color: #fb923c;
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.18);
+    }
+
+    .sign-board td {
+      width: 46px;
+      height: 39px;
+      font-size: 1.15rem;
+      font-weight: 850;
+    }
+
+    .sign-plus {
+      color: var(--green);
+    }
+
+    .sign-minus {
+      color: var(--pink);
+    }
+
+    .expansion-buttons {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .expansion-button {
+      min-height: 39px;
+      color: var(--navy);
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    .expansion-button.active {
+      color: white;
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin: 12px 0;
+    }
+
+    .term-card {
+      padding: 11px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      text-align: center;
+    }
+
+    .term-card .term-name {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 750;
+    }
+
+    .term-card .term-value {
+      margin-top: 4px;
+      color: var(--navy);
+      font-family: "Cambria Math", Cambria, serif;
+      font-size: 1.04rem;
+    }
+
+    .sarrus-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .sarrus-group {
+      padding: 13px;
+      border-radius: 10px;
+    }
+
+    .sarrus-group.positive {
+      color: #166534;
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+    }
+
+    .sarrus-group.negative {
+      color: #9f1239;
+      background: #fff1f2;
+      border: 1px solid #fda4af;
+    }
+
+    /* ==========================================================
+       ROW OPERATIONS
+    ========================================================== */
+
+    .operation-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .operation-fields .full {
+      grid-column: 1 / -1;
+    }
+
+    .operation-preview {
+      margin-top: 11px;
+      padding: 10px;
+      color: #172554;
+      background: var(--blue-light);
+      border: 1px solid #a5b4fc;
+      border-radius: 9px;
+      font-family: "Cambria Math", Cambria, serif;
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 8px;
+      max-height: 330px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 11px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      font-size: 0.88rem;
+    }
+
+    .history-number {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--navy);
+      border-radius: 50%;
+      font-weight: 800;
+    }
+
+    .property-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .property-strip > div {
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    /* ==========================================================
+       ADVANCED LAB
+    ========================================================== */
+
+    .property-results {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .property-card {
+      min-height: 110px;
+      padding: 13px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .property-card .property-formula {
+      color: var(--muted);
+      font-family: "Cambria Math", Cambria, serif;
+      font-size: 0.95rem;
+    }
+
+    .property-card .property-answer {
+      margin-top: 8px;
+      color: var(--purple);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1.12rem;
+      font-weight: 850;
+    }
+
+    .stage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .stage-card {
+      padding: 15px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+      text-align: center;
+    }
+
+    .stage-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 8px;
+      color: white;
+      background: var(--purple);
+      border-radius: 50%;
+      font-weight: 850;
+    }
+
+    .stage-card h4 {
+      margin: 0 0 9px;
+      color: #4c1d95;
+    }
+
+    .cramer-cases {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .cramer-case {
+      padding: 13px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .cramer-case h4 {
+      margin: 0 0 8px;
+      color: var(--navy);
+    }
+
+    .complexity-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    /* ==========================================================
+       QUIZ
+    ========================================================== */
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: minmax(245px, 0.62fr) minmax(0, 2fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .quiz-sidebar {
+      padding: 20px;
+      position: sticky;
+      top: 82px;
+    }
+
+    .quiz-card {
+      min-height: 510px;
+      padding: clamp(20px, 4vw, 34px);
+    }
+
+    .quiz-score {
+      display: grid;
+      place-items: center;
+      min-height: 105px;
+      margin: 13px 0;
+      color: white;
+      background:
+        linear-gradient(135deg, var(--navy), var(--purple));
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .quiz-score-number {
+      font-size: 2rem;
+      font-weight: 880;
+      line-height: 1;
+    }
+
+    .quiz-score-label {
+      margin-top: 5px;
+      font-size: 0.83rem;
+      opacity: 0.9;
+    }
+
+    .progress-track {
+      height: 11px;
+      margin: 9px 0 5px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--navy), var(--purple));
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .topic-summary {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .topic-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 0.85rem;
+    }
+
+    .quiz-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .quiz-topic {
+      padding: 5px 10px;
+      color: var(--navy);
+      background: var(--blue-light);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .quiz-number {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .quiz-question {
+      margin: 8px 0 22px;
+      color: #1e2c4a;
+      font-family: "Cambria Math", Cambria, Georgia, serif;
+      font-size: clamp(1.14rem, 3vw, 1.45rem);
+      line-height: 1.5;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-option {
+      width: 100%;
+      padding: 13px 15px;
+      color: #334155;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 11px;
+      text-align: left;
+      transition: 140ms ease;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+      background: #f1f5ff;
+      border-color: #a5b4fc;
+      transform: translateY(-1px);
+    }
+
+    .quiz-option.selected {
+      color: #1e3a8a;
+      background: #eef2ff;
+      border-color: var(--blue);
+    }
+
+    .quiz-option.correct {
+      color: var(--good-ink);
+      background: var(--good-bg);
+      border-color: var(--good-border);
+    }
+
+    .quiz-option.wrong {
+      color: #9f1239;
+      background: #fff1f2;
+      border-color: #fda4af;
+    }
+
+    .option-letter {
+      display: inline-grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      margin-right: 9px;
+      color: white;
+      background: #64748b;
+      border-radius: 50%;
+      font-weight: 850;
+    }
+
+    .quiz-option.selected .option-letter {
+      background: var(--navy);
+    }
+
+    .quiz-option.correct .option-letter {
+      background: #16a34a;
+    }
+
+    .quiz-option.wrong .option-letter {
+      background: #e11d48;
+    }
+
+    .quiz-feedback {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid;
+      border-radius: 11px;
+    }
+
+    .quiz-feedback.good {
+      color: var(--good-ink);
+      background: var(--good-bg);
+      border-color: var(--good-border);
+    }
+
+    .quiz-feedback.warn {
+      color: var(--warn-ink);
+      background: var(--warn-bg);
+      border-color: var(--warn-border);
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .quiz-final {
+      display: grid;
+      place-items: center;
+      min-height: 410px;
+      text-align: center;
+    }
+
+    .quiz-final-score {
+      display: grid;
+      place-items: center;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 18px;
+      color: white;
+      background:
+        linear-gradient(135deg, var(--navy), var(--purple));
+      border: 10px solid #ede9fe;
+      border-radius: 50%;
+      font-size: 2rem;
+      font-weight: 880;
+    }
+
+    /* ==========================================================
+       FOOTER AND RESPONSIVE DESIGN
+    ========================================================== */
+
+    .site-footer {
+      padding: 28px 20px 42px;
+      color: #64748b;
+      text-align: center;
+    }
+
+    .site-footer strong {
+      color: #334155;
+    }
+
+    @media (max-width: 1080px) {
+      .lesson-tabs {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .fact-grid,
+      .property-results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 930px) {
+      .workspace,
+      .quiz-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .control-card,
+      .quiz-sidebar {
+        position: static;
+      }
+
+      .stage-grid,
+      .cramer-cases {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding: 34px 18px 32px;
+      }
+
+      .page-shell {
+        width: min(100% - 18px, 1260px);
+      }
+
+      .core-banner {
+        grid-template-columns: 1fr;
+      }
+
+      .core-label,
+      .core-conclusion {
+        width: max-content;
+      }
+
+      .lesson-tabs {
+        position: static;
+        grid-template-columns: 1fr;
+      }
+
+      .lesson-tab {
+        min-height: 44px;
+      }
+
+      .section-heading {
+        flex-direction: column-reverse;
+      }
+
+      .two-column,
+      .three-column,
+      .metric-grid,
+      .term-grid,
+      .sarrus-columns,
+      .operation-fields,
+      .property-results,
+      .complexity-track,
+      .fact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .operation-fields .full {
+        grid-column: auto;
+      }
+
+      .expansion-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .property-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix-input {
+        width: 50px;
+      }
+
+      .vector-plot {
+        min-height: 300px;
+      }
+
+      .quiz-actions {
+        flex-direction: column;
+      }
+
+      .quiz-actions .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      .lesson-tabs,
+      .control-card button,
+      .quiz-actions,
+      .quiz-sidebar button {
+        display: none !important;
+      }
+
+      .lesson-panel {
+        display: block !important;
+        break-before: page;
+      }
+
+      .workspace,
+      .quiz-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .control-card,
+      .quiz-sidebar {
+        position: static;
+      }
+
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">
+        The Hong Kong Polytechnic University · AMA1751 Linear Algebra
+      </div>
+
+      <h1>Determinant Explorer</h1>
+
+      <p class="hero-description">
+        Explore determinants through area, cofactors, elementary operations,
+        triangularisation, adjugates, inverse matrices and Cramer’s Rule.
+      </p>
+
+      <div class="hero-meta">
+        <span>Dr. LEE Kei Fung, Charles</span>
+        <span class="hero-badge">2026/27 Semester 1</span>
+        <span class="hero-badge">Topic 3</span>
+        <span class="hero-badge">Basic → Intermediate → Advanced</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="core-banner">
+      <div class="core-label">Core formula</div>
+
+      <div class="core-formula">
+        det
+        <span class="matrix display-matrix compact">
+          <table>
+            <tr><td>a</td><td>b</td></tr>
+            <tr><td>c</td><td>d</td></tr>
+          </table>
+        </span>
+        = ad − bc
+      </div>
+
+      <div class="core-conclusion">
+        det A ≠ 0 ⇔ A is nonsingular
+      </div>
+    </section>
+
+    <nav
+      class="lesson-tabs"
+      role="tablist"
+      aria-label="Determinant lesson levels"
+    >
+      <button
+        class="lesson-tab active"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        data-target="basic"
+      >
+        1 · Basic ideas
+      </button>
+
+      <button
+        class="lesson-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-target="cofactors"
+      >
+        2 · Cofactors
+      </button>
+
+      <button
+        class="lesson-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-target="operations"
+      >
+        3 · Row operations
+      </button>
+
+      <button
+        class="lesson-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-target="advanced"
+      >
+        4 · Advanced applications
+      </button>
+
+      <button
+        class="lesson-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-target="test"
+      >
+        5 · Self-test
+      </button>
+    </nav>
+
+    <!-- =======================================================
+         BASIC
+    ======================================================== -->
+
+    <section id="basic" class="lesson-panel active" role="tabpanel">
+      <div class="section-heading">
+        <div>
+          <h2>Basic — What does a determinant tell us?</h2>
+
+          <p>
+            Change the entries of a 2 × 2 matrix or drag its two column
+            vectors. The signed area, orientation, singularity and inverse
+            update immediately.
+          </p>
+        </div>
+
+        <span class="level-tag basic">Basic</span>
+      </div>
+
+      <div class="callout">
+        <strong>Suggested investigation:</strong>
+        First load the positive determinant example. Then reverse the two
+        columns and observe the sign. Finally, make the columns parallel and
+        observe why the determinant becomes zero.
+      </div>
+
+      <div class="workspace">
+        <aside class="control-card">
+          <h3>Matrix controls</h3>
+
+          <p class="small-note">
+            The columns of A are the vectors
+            <strong>v₁</strong> and <strong>v₂</strong>.
+            Fractional entries such as <code>3/2</code> are accepted.
+          </p>
+
+          <div id="basicMatrixEditor" class="matrix-holder"></div>
+
+          <div class="preset-row">
+            <button
+              type="button"
+              class="button secondary"
+              data-basic-preset="positive"
+            >
+              Positive det
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-basic-preset="negative"
+            >
+              Negative det
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-basic-preset="singular"
+            >
+              Singular
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-basic-preset="identity"
+            >
+              Identity
+            </button>
+          </div>
+
+          <div class="status info" style="margin-top:14px">
+            <strong>Interactive graph</strong>
+            Drag the blue and red endpoints. Values are rounded to the
+            nearest quarter.
+          </div>
+        </aside>
+
+        <div class="content-stack">
+          <article class="card">
+            <h3>Column vectors and oriented area</h3>
+
+            <svg
+              id="basicVectorPlot"
+              class="vector-plot"
+              viewBox="0 0 620 440"
+              role="img"
+              aria-label="Column vectors and determinant parallelogram"
+            ></svg>
+          </article>
+
+          <article class="card">
+            <div id="basicFormula"></div>
+
+            <div id="basicMetrics" class="metric-grid"></div>
+
+            <div
+              id="basicStatus"
+              style="margin-top:13px"
+              aria-live="polite"
+            ></div>
+          </article>
+
+          <article class="card">
+            <h3>Inverse formula</h3>
+            <div id="basicInverse"></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="fact-grid">
+        <article class="fact-card">
+          <h4>Positive determinant</h4>
+          <p>
+            The orientation of the two column vectors is preserved.
+          </p>
+        </article>
+
+        <article class="fact-card">
+          <h4>Negative determinant</h4>
+          <p>
+            The orientation is reversed. Interchanging two columns changes
+            the sign.
+          </p>
+        </article>
+
+        <article class="fact-card">
+          <h4>Zero determinant</h4>
+          <p>
+            The columns are dependent and the parallelogram collapses to a
+            line or point.
+          </p>
+        </article>
+
+        <article class="fact-card">
+          <h4>Nonzero determinant</h4>
+          <p>
+            The matrix is nonsingular, has an inverse and has a pivot in
+            every row and column.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         COFACTORS
+    ======================================================== -->
+
+    <section id="cofactors" class="lesson-panel" role="tabpanel">
+      <div class="section-heading">
+        <div>
+          <h2>Intermediate — Minors, cofactors and expansion</h2>
+
+          <p>
+            Select an entry to see the deleted row and column, the resulting
+            minor, the cofactor sign and the cofactor value. You may then
+            expand along any row or column.
+          </p>
+        </div>
+
+        <span class="level-tag intermediate">Intermediate</span>
+      </div>
+
+      <div class="callout">
+        <strong>Example 3.1 from the handout:</strong>
+        the default matrix has determinant 14. Check the result by expanding
+        along different rows and columns.
+      </div>
+
+      <div class="workspace">
+        <aside class="control-card">
+          <h3>Enter a 3 × 3 matrix</h3>
+
+          <div id="cofactorMatrixEditor" class="matrix-holder"></div>
+
+          <div class="preset-row">
+            <button
+              type="button"
+              class="button secondary"
+              data-cofactor-preset="example"
+            >
+              Example 3.1
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cofactor-preset="triangular"
+            >
+              Triangular
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cofactor-preset="zeros"
+            >
+              Many zeros
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cofactor-preset="random"
+            >
+              Random
+            </button>
+          </div>
+
+          <h3 class="subheading">Cofactor signs</h3>
+          <div id="cofactorSigns" class="matrix-holder"></div>
+
+          <p class="small-note">
+            The sign of \(C_{ij}\) is determined by
+            \((-1)^{i+j}\).
+          </p>
+        </aside>
+
+        <div class="content-stack">
+          <div class="two-column">
+            <article class="card">
+              <h3>Click an entry a<sub>ij</sub></h3>
+
+              <div id="cofactorClickable" class="matrix-holder"></div>
+
+              <p class="small-note">
+                Red cells belong to the deleted row or column. Green cells
+                form the minor matrix.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Selected minor and cofactor</h3>
+              <div id="cofactorDetails" aria-live="polite"></div>
+            </article>
+          </div>
+
+          <article class="card">
+            <h3>Cofactor expansion</h3>
+
+            <div
+              id="cofactorExpansionButtons"
+              class="expansion-buttons"
+            ></div>
+
+            <div id="cofactorRecommendation"></div>
+            <div id="cofactorExpansion"></div>
+          </article>
+
+          <article class="card">
+            <h3>Six-term pattern for a 3 × 3 determinant</h3>
+
+            <p class="small-note">
+              This visualization corresponds to the six products appearing
+              in the 3 × 3 determinant formula.
+            </p>
+
+            <div id="sarrusDisplay"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         OPERATIONS
+    ======================================================== -->
+
+    <section id="operations" class="lesson-panel" role="tabpanel">
+      <div class="section-heading">
+        <div>
+          <h2>Intermediate — Elementary operations and determinants</h2>
+
+          <p>
+            Perform row or column operations and track exactly how the
+            determinant changes. You may also ask the program to construct an
+            upper triangular matrix automatically.
+          </p>
+        </div>
+
+        <span class="level-tag intermediate">Intermediate</span>
+      </div>
+
+      <div class="callout">
+        <strong>Key rules:</strong>
+        replacement preserves the determinant; scaling multiplies it by the
+        scale factor; interchange changes its sign.
+      </div>
+
+      <div class="workspace">
+        <aside class="control-card">
+          <h3>Operation laboratory</h3>
+
+          <div class="control-group">
+            <label class="control-label" for="rowDimension">
+              Matrix size
+            </label>
+
+            <select id="rowDimension">
+              <option value="3">3 × 3</option>
+              <option value="4" selected>4 × 4</option>
+            </select>
+          </div>
+
+          <div id="rowMatrixEditor" class="matrix-holder"></div>
+
+          <div class="preset-row">
+            <button
+              type="button"
+              class="button secondary"
+              data-row-preset="example"
+            >
+              Example 3.3
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-row-preset="triangular"
+            >
+              Triangular
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-row-preset="random"
+            >
+              Random
+            </button>
+          </div>
+
+          <h3 class="subheading">Choose an operation</h3>
+
+          <div class="operation-fields">
+            <div>
+              <label class="control-label" for="opAxis">
+                Rows or columns
+              </label>
+
+              <select id="opAxis">
+                <option value="row">Row operation</option>
+                <option value="column">Column operation</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="control-label" for="opType">
+                Operation type
+              </label>
+
+              <select id="opType">
+                <option value="replace">Replacement</option>
+                <option value="scale">Scaling</option>
+                <option value="swap">Interchange</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="control-label" for="opTarget">
+                <span id="opTargetLabel">Target row</span>
+              </label>
+
+              <select id="opTarget"></select>
+            </div>
+
+            <div id="opSourceGroup">
+              <label class="control-label" for="opSource">
+                <span id="opSourceLabel">Source row</span>
+              </label>
+
+              <select id="opSource"></select>
+            </div>
+
+            <div id="opKGroup" class="full">
+              <label class="control-label" for="opK">
+                Scalar k
+              </label>
+
+              <input
+                id="opK"
+                class="field"
+                type="text"
+                value="-1"
+                inputmode="decimal"
+              >
+            </div>
+          </div>
+
+          <div id="opPreview" class="operation-preview"></div>
+
+          <div class="button-row">
+            <button
+              id="applyOperation"
+              type="button"
+              class="button"
+            >
+              Apply operation
+            </button>
+
+            <button
+              id="undoOperation"
+              type="button"
+              class="button secondary"
+            >
+              Undo
+            </button>
+          </div>
+
+          <div class="button-row">
+            <button
+              id="autoEliminate"
+              type="button"
+              class="button purple"
+            >
+              Auto-triangularise
+            </button>
+
+            <button
+              id="restoreRowBase"
+              type="button"
+              class="button danger"
+            >
+              Restore original
+            </button>
+          </div>
+
+          <div
+            id="rowActionMessage"
+            class="status info"
+            style="margin-top:13px"
+          >
+            <strong>Ready</strong>
+            Choose an operation and predict its effect before applying it.
+          </div>
+        </aside>
+
+        <div class="content-stack">
+          <article class="card">
+            <h3>Current matrix and determinant bookkeeping</h3>
+
+            <div id="rowCurrentMatrix"></div>
+            <div id="rowTracker"></div>
+
+            <div
+              id="rowStatus"
+              style="margin-top:13px"
+              aria-live="polite"
+            ></div>
+          </article>
+
+          <article class="card">
+            <h3>Operation history</h3>
+            <div id="rowHistory" class="history-list"></div>
+          </article>
+
+          <article class="card">
+            <h3>Three determinant rules</h3>
+
+            <div class="property-strip">
+              <div>
+                <strong>Replacement</strong><br>
+                R<sub>p</sub> + kR<sub>q</sub> → R<sub>p</sub><br>
+                determinant unchanged
+              </div>
+
+              <div>
+                <strong>Scaling</strong><br>
+                kR<sub>p</sub> → R<sub>p</sub><br>
+                determinant multiplied by k
+              </div>
+
+              <div>
+                <strong>Interchange</strong><br>
+                R<sub>p</sub> ↔ R<sub>q</sub><br>
+                determinant multiplied by −1
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         ADVANCED
+    ======================================================== -->
+
+    <section id="advanced" class="lesson-panel" role="tabpanel">
+      <div class="section-heading">
+        <div>
+          <h2>Advanced — Properties, adjugates and Cramer’s Rule</h2>
+
+          <p>
+            Connect determinant properties with matrix products, scalar
+            multiples, inverses, the adjugate identity and solutions of
+            linear systems.
+          </p>
+        </div>
+
+        <span class="level-tag advanced">Advanced</span>
+      </div>
+
+      <div class="callout">
+        <strong>Main identities:</strong>
+        det(AB)=det(A)det(B),
+        A adj(A)=det(A)I and
+        A⁻¹=(1/det A)adj(A) when det A≠0.
+      </div>
+
+      <article class="card">
+        <h3>4A. Determinant property calculator</h3>
+
+        <div class="three-column">
+          <div>
+            <label class="control-label" for="propN">
+              Matrix order n
+            </label>
+
+            <input
+              id="propN"
+              class="field"
+              type="number"
+              min="2"
+              max="10"
+              value="4"
+            >
+          </div>
+
+          <div>
+            <label class="control-label" for="propDet">
+              det A
+            </label>
+
+            <input
+              id="propDet"
+              class="field"
+              type="text"
+              value="3"
+            >
+          </div>
+
+          <div>
+            <label class="control-label" for="propK">
+              Scalar k
+            </label>
+
+            <input
+              id="propK"
+              class="field"
+              type="text"
+              value="2"
+            >
+          </div>
+        </div>
+
+        <div id="propertyResults" class="property-results" style="margin-top:15px"></div>
+        <div id="propertyStatus" style="margin-top:13px"></div>
+      </article>
+
+      <div style="height:16px"></div>
+
+      <div class="workspace">
+        <aside class="control-card">
+          <h3>4B. Adjugate and inverse</h3>
+
+          <div class="control-group">
+            <label class="control-label" for="adjDimension">
+              Matrix size
+            </label>
+
+            <select id="adjDimension">
+              <option value="2">2 × 2</option>
+              <option value="3" selected>3 × 3</option>
+            </select>
+          </div>
+
+          <div id="adjMatrixEditor" class="matrix-holder"></div>
+
+          <div class="preset-row">
+            <button
+              type="button"
+              class="button secondary"
+              data-adj-preset="example3"
+            >
+              3 × 3 example
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-adj-preset="example2"
+            >
+              2 × 2 example
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-adj-preset="singular"
+            >
+              Singular
+            </button>
+          </div>
+        </aside>
+
+        <div class="content-stack">
+          <article class="card">
+            <h3>Cofactor matrix → transpose → adjugate</h3>
+            <div id="adjResults"></div>
+          </article>
+
+          <article class="card">
+            <h3>Verification and inverse</h3>
+            <div id="adjStatus"></div>
+          </article>
+        </div>
+      </div>
+
+      <div style="height:17px"></div>
+
+      <div class="workspace">
+        <aside class="control-card">
+          <h3>4C. Cramer’s Rule</h3>
+
+          <div class="control-group">
+            <label class="control-label" for="cramerDimension">
+              System size
+            </label>
+
+            <select id="cramerDimension">
+              <option value="2" selected>2 unknowns</option>
+              <option value="3">3 unknowns</option>
+            </select>
+          </div>
+
+          <div class="two-column">
+            <div>
+              <div class="control-label">Matrix A</div>
+              <div id="cramerMatrixEditor" class="matrix-holder"></div>
+            </div>
+
+            <div>
+              <div class="control-label">Vector b</div>
+              <div id="cramerVectorEditor" class="matrix-holder"></div>
+            </div>
+          </div>
+
+          <div class="preset-row">
+            <button
+              type="button"
+              class="button secondary"
+              data-cramer-preset="handout2"
+            >
+              Handout 2 × 2
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cramer-preset="handout3"
+            >
+              Handout 3 × 3
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cramer-preset="random"
+            >
+              Random solvable
+            </button>
+
+            <button
+              type="button"
+              class="button secondary"
+              data-cramer-preset="singular"
+            >
+              Singular system
+            </button>
+          </div>
+        </aside>
+
+        <div class="content-stack">
+          <article class="card">
+            <h3>Replace each column by b</h3>
+            <div id="cramerResults"></div>
+          </article>
+
+          <article class="card">
+            <h3>Solution and verification</h3>
+            <div id="cramerStatus"></div>
+          </article>
+        </div>
+      </div>
+
+      <div style="height:17px"></div>
+
+      <article class="card">
+        <h3>4D. Why computational method matters</h3>
+
+        <p class="small-note">
+          Direct determinant formulas involve rapidly increasing numbers of
+          terms. Practical software normally uses elimination or matrix
+          factorisation rather than a full cofactor expansion.
+        </p>
+
+        <label class="control-label" for="complexityN">
+          <span>Matrix size n</span>
+          <output id="complexityNValue">8</output>
+        </label>
+
+        <input
+          id="complexityN"
+          type="range"
+          min="2"
+          max="20"
+          value="8"
+        >
+
+        <div class="complexity-track">
+          <div class="metric">
+            <div class="metric-label">Permutation terms n!</div>
+            <div id="factorialCount" class="metric-value"></div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Elimination scale n³</div>
+            <div id="eliminationCount" class="metric-value"></div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Approximate ratio</div>
+            <div id="complexityRatio" class="metric-value"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- =======================================================
+         TEST
+    ======================================================== -->
+
+    <section id="test" class="lesson-panel" role="tabpanel">
+      <div class="section-heading">
+        <div>
+          <h2>Self-test — Check student understanding</h2>
+
+          <p>
+            Choose a level and complete a randomized test. Each question
+            provides immediate feedback and an explanation.
+          </p>
+        </div>
+
+        <span class="level-tag test">Test</span>
+      </div>
+
+      <div class="quiz-layout">
+        <aside class="quiz-sidebar">
+          <h3>Test settings</h3>
+
+          <label class="control-label" for="quizLevel">
+            Difficulty
+          </label>
+
+          <select id="quizLevel">
+            <option value="basic">Basic</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+            <option value="mixed" selected>Mixed review</option>
+          </select>
+
+          <button
+            id="quizRestart"
+            type="button"
+            class="button"
+            style="width:100%; margin-top:10px"
+          >
+            Start a new test
+          </button>
+
+          <div class="quiz-score">
+            <div>
+              <div id="quizScore" class="quiz-score-number">0 / 10</div>
+              <div class="quiz-score-label">Current score</div>
+            </div>
+          </div>
+
+          <div id="quizProgressText" class="small-note">
+            0 of 10 questions completed
+          </div>
+
+          <div class="progress-track">
+            <div id="quizProgressBar" class="progress-fill"></div>
+          </div>
+
+          <div id="quizTopicSummary" class="topic-summary"></div>
+        </aside>
+
+        <article
+          id="quizMain"
+          class="quiz-card"
+          aria-live="polite"
+        ></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <strong>AMA1751 Linear Algebra · Topic 3 — Determinant</strong><br>
+    Based on “AMA1751 Topic - 3 - handout - 2627S1.pdf”<br>
+    Dr. LEE Kei Fung, Charles · The Hong Kong Polytechnic University
+  </footer>
+
+  <noscript>
+    This activity requires JavaScript for its interactive components.
+  </noscript>
+
+  <script>
+    "use strict";
+
+    /* ============================================================
+       GENERAL UTILITIES
+    ============================================================ */
+
+    const byId = id => document.getElementById(id);
+
+    const clamp = (value, minimum, maximum) =>
+      Math.min(maximum, Math.max(minimum, value));
+
+    const deepCopy = matrix =>
+      matrix.map(row => [...row]);
+
+    const approximatelyEqual = (a, b, tolerance = 1e-8) =>
+      Number.isFinite(a) &&
+      Number.isFinite(b) &&
+      Math.abs(a - b) <=
+        tolerance * (1 + Math.max(Math.abs(a), Math.abs(b)));
+
+    const isZero = value =>
+      Math.abs(value) < 1e-10;
+
+    function cleanNumber(value) {
+      if (!Number.isFinite(value)) return value;
+      if (isZero(value)) return 0;
+
+      const rounded = Math.round(value);
+
+      if (Math.abs(value - rounded) < 1e-11) {
+        return rounded;
+      }
+
+      return Number(value.toPrecision(12));
+    }
+
+    function escapeHTML(value) {
+      const replacements = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return String(value).replace(
+        /[&<>"']/g,
+        character => replacements[character]
+      );
+    }
+
+    function parseScalar(value) {
+      const text = String(value)
+        .trim()
+        .replace(/[−–—]/g, "-");
+
+      if (!text) return NaN;
+
+      const fraction =
+        text.match(
+          /^([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*\/\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))$/
+        );
+
+      if (fraction) {
+        const numerator = Number(fraction[1]);
+        const denominator = Number(fraction[2]);
+
+        if (denominator === 0) return NaN;
+        return numerator / denominator;
+      }
+
+      const number = Number(text);
+      return Number.isFinite(number) ? number : NaN;
+    }
+
+    function fractionApproximation(value, maxDenominator = 80) {
+      let bestNumerator = Math.round(value);
+      let bestDenominator = 1;
+      let bestError = Math.abs(value - bestNumerator);
+
+      for (
+        let denominator = 2;
+        denominator <= maxDenominator;
+        denominator++
+      ) {
+        const numerator =
+          Math.round(value * denominator);
+
+        const error =
+          Math.abs(value - numerator / denominator);
+
+        if (error < bestError) {
+          bestError = error;
+          bestNumerator = numerator;
+          bestDenominator = denominator;
+        }
+      }
+
+      return {
+        numerator: bestNumerator,
+        denominator: bestDenominator,
+        error: bestError
+      };
+    }
+
+    function formatNumber(value, digits = 6) {
+      if (Number.isNaN(value)) return "undefined";
+      if (value === Infinity) return "+∞";
+      if (value === -Infinity) return "−∞";
+      if (!Number.isFinite(value)) return "undefined";
+
+      if (Math.abs(value) < 1e-11) return "0";
+
+      const rounded = Math.round(value);
+
+      if (Math.abs(value - rounded) < 1e-10) {
+        return String(rounded).replace("-", "−");
+      }
+
+      if (
+        Math.abs(value) < 1000000 &&
+        Math.abs(value) > 1e-8
+      ) {
+        const fraction = fractionApproximation(value);
+
+        if (
+          fraction.denominator > 1 &&
+          fraction.error <
+            1e-10 * (1 + Math.abs(value))
+        ) {
+          return (
+            `${fraction.numerator}/${fraction.denominator}`
+          ).replace("-", "−");
+        }
+      }
+
+      if (
+        Math.abs(value) >= 1000000 ||
+        Math.abs(value) < 0.00001
+      ) {
+        return value
+          .toExponential(4)
+          .replace("-", "−");
+      }
+
+      return Number(value.toFixed(digits))
+        .toString()
+        .replace("-", "−");
+    }
+
+    function inputNumber(value) {
+      if (!Number.isFinite(value)) return "";
+
+      if (approximatelyEqual(value, Math.round(value), 1e-11)) {
+        return String(Math.round(value));
+      }
+
+      return String(Number(value.toFixed(8)));
+    }
+
+    function setStatus(element, type, heading, body) {
+      element.className = `status ${type}`;
+
+      element.innerHTML = `
+        <strong>${heading}</strong>
+        <div>${body}</div>
+      `;
+    }
+
+    function randomInteger(minimum, maximum) {
+      return Math.floor(
+        Math.random() * (maximum - minimum + 1)
+      ) + minimum;
+    }
+
+    function shuffledCopy(array) {
+      const result = [...array];
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [result[i], result[j]] =
+          [result[j], result[i]];
+      }
+
+      return result;
+    }
+
+    /* ============================================================
+       MATRIX UTILITIES
+    ============================================================ */
+
+    function minorMatrix(matrix, deletedRow, deletedColumn) {
+      return matrix
+        .filter((_, row) => row !== deletedRow)
+        .map(row =>
+          row.filter((_, column) => column !== deletedColumn)
+        );
+    }
+
+    function determinant(matrix) {
+      const n = matrix.length;
+
+      if (n === 0) return 1;
+      if (n === 1) return matrix[0][0];
+
+      if (n === 2) {
+        return cleanNumber(
+          matrix[0][0] * matrix[1][1] -
+          matrix[0][1] * matrix[1][0]
+        );
+      }
+
+      let bestRow = 0;
+      let mostZeros = -1;
+
+      for (let row = 0; row < n; row++) {
+        const zeroCount =
+          matrix[row].filter(isZero).length;
+
+        if (zeroCount > mostZeros) {
+          mostZeros = zeroCount;
+          bestRow = row;
+        }
+      }
+
+      let total = 0;
+
+      for (let column = 0; column < n; column++) {
+        const entry = matrix[bestRow][column];
+
+        if (isZero(entry)) continue;
+
+        const sign =
+          (bestRow + column) % 2 === 0 ? 1 : -1;
+
+        total +=
+          entry *
+          sign *
+          determinant(
+            minorMatrix(matrix, bestRow, column)
+          );
+      }
+
+      return cleanNumber(total);
+    }
+
+    function cofactor(matrix, row, column) {
+      const sign =
+        (row + column) % 2 === 0 ? 1 : -1;
+
+      return cleanNumber(
+        sign *
+        determinant(
+          minorMatrix(matrix, row, column)
+        )
+      );
+    }
+
+    function cofactorMatrix(matrix) {
+      return matrix.map((row, i) =>
+        row.map((_, j) => cofactor(matrix, i, j))
+      );
+    }
+
+    function transpose(matrix) {
+      return matrix[0].map((_, column) =>
+        matrix.map(row => row[column])
+      );
+    }
+
+    function identityMatrix(n) {
+      return Array.from(
+        { length: n },
+        (_, row) =>
+          Array.from(
+            { length: n },
+            (_, column) => row === column ? 1 : 0
+          )
+      );
+    }
+
+    function scaleMatrix(matrix, scalar) {
+      return matrix.map(row =>
+        row.map(value => cleanNumber(value * scalar))
+      );
+    }
+
+    function multiplyMatrices(left, right) {
+      const rows = left.length;
+      const columns = right[0].length;
+      const shared = right.length;
+
+      return Array.from(
+        { length: rows },
+        (_, row) =>
+          Array.from(
+            { length: columns },
+            (_, column) => {
+              let total = 0;
+
+              for (let k = 0; k < shared; k++) {
+                total += left[row][k] * right[k][column];
+              }
+
+              return cleanNumber(total);
+            }
+          )
+      );
+    }
+
+    function matrixVectorMultiply(matrix, vector) {
+      return matrix.map(row =>
+        cleanNumber(
+          row.reduce(
+            (total, value, index) =>
+              total + value * vector[index],
+            0
+          )
+        )
+      );
+    }
+
+    function replaceColumn(matrix, column, vector) {
+      return matrix.map((row, rowIndex) =>
+        row.map((value, columnIndex) =>
+          columnIndex === column
+            ? vector[rowIndex]
+            : value
+        )
+      );
+    }
+
+    function matricesClose(left, right, tolerance = 1e-7) {
+      if (
+        left.length !== right.length ||
+        left[0].length !== right[0].length
+      ) {
+        return false;
+      }
+
+      return left.every((row, i) =>
+        row.every((value, j) =>
+          approximatelyEqual(
+            value,
+            right[i][j],
+            tolerance
+          )
+        )
+      );
+    }
+
+    function isUpperTriangular(matrix) {
+      for (let row = 1; row < matrix.length; row++) {
+        for (let column = 0; column < row; column++) {
+          if (!isZero(matrix[row][column])) return false;
+        }
+      }
+
+      return true;
+    }
+
+    function isLowerTriangular(matrix) {
+      for (let row = 0; row < matrix.length; row++) {
+        for (
+          let column = row + 1;
+          column < matrix.length;
+          column++
+        ) {
+          if (!isZero(matrix[row][column])) return false;
+        }
+      }
+
+      return true;
+    }
+
+    function matrixHTML(matrix, options = {}) {
+      const compact = options.compact ? "compact" : "";
+
+      return `
+        <span class="matrix display-matrix ${compact}">
+          <table>
+            <tbody>
+              ${matrix.map(row => `
+                <tr>
+                  ${row.map(value => `
+                    <td>${escapeHTML(formatNumber(value))}</td>
+                  `).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </span>
+      `;
+    }
+
+    function mountMatrixEditor(
+      container,
+      rows,
+      columns,
+      getValue,
+      onChange
+    ) {
+      container.innerHTML = `
+        <span class="matrix">
+          <table>
+            <tbody>
+              ${Array.from({ length: rows }, (_, row) => `
+                <tr>
+                  ${Array.from({ length: columns }, (_, column) => `
+                    <td>
+                      <input
+                        class="matrix-input"
+                        type="text"
+                        inputmode="decimal"
+                        data-row="${row}"
+                        data-column="${column}"
+                        value="${escapeHTML(
+                          inputNumber(getValue(row, column))
+                        )}"
+                        aria-label="Entry row ${row + 1}, column ${column + 1}"
+                      >
+                    </td>
+                  `).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </span>
+      `;
+
+      container.oninput = event => {
+        const input =
+          event.target.closest(".matrix-input");
+
+        if (!input) return;
+
+        const row = Number(input.dataset.row);
+        const column = Number(input.dataset.column);
+        const value = parseScalar(input.value);
+        const valid = Number.isFinite(value);
+
+        input.classList.toggle("invalid", !valid);
+
+        if (valid) {
+          onChange(row, column, value);
+        }
+      };
+
+      container.onfocusout = event => {
+        const input =
+          event.target.closest(".matrix-input");
+
+        if (!input) return;
+
+        const row = Number(input.dataset.row);
+        const column = Number(input.dataset.column);
+
+        if (!Number.isFinite(parseScalar(input.value))) {
+          input.value =
+            inputNumber(getValue(row, column));
+
+          input.classList.remove("invalid");
+        }
+      };
+    }
+
+    function syncMatrixEditor(container, getValue) {
+      for (
+        const input of
+        container.querySelectorAll(".matrix-input")
+      ) {
+        if (document.activeElement === input) continue;
+
+        const row = Number(input.dataset.row);
+        const column = Number(input.dataset.column);
+
+        input.value =
+          inputNumber(getValue(row, column));
+
+        input.classList.remove("invalid");
+      }
+    }
+
+    /* ============================================================
+       TAB NAVIGATION
+    ============================================================ */
+
+    function activateLesson(targetId) {
+      for (
+        const tab of
+        document.querySelectorAll(".lesson-tab")
+      ) {
+        const selected =
+          tab.dataset.target === targetId;
+
+        tab.classList.toggle("active", selected);
+        tab.setAttribute(
+          "aria-selected",
+          String(selected)
+        );
+      }
+
+      for (
+        const panel of
+        document.querySelectorAll(".lesson-panel")
+      ) {
+        panel.classList.toggle(
+          "active",
+          panel.id === targetId
+        );
+      }
+    }
+
+    for (
+      const tab of
+      document.querySelectorAll(".lesson-tab")
+    ) {
+      tab.addEventListener("click", () => {
+        activateLesson(tab.dataset.target);
+      });
+    }
+
+    /* ============================================================
+       BASIC LAB
+    ============================================================ */
+
+    const BASIC_PRESETS = {
+      positive: [
+        [2, 1],
+        [1, 3]
+      ],
+
+      negative: [
+        [1, 3],
+        [2, 1]
+      ],
+
+      singular: [
+        [2, 1],
+        [4, 2]
+      ],
+
+      identity: [
+        [1, 0],
+        [0, 1]
+      ]
+    };
+
+    const basicState = {
+      matrix: deepCopy(BASIC_PRESETS.positive),
+      plotRange: 5,
+      draggingVector: null
+    };
+
+    function mountBasicEditor() {
+      mountMatrixEditor(
+        byId("basicMatrixEditor"),
+        2,
+        2,
+        (row, column) =>
+          basicState.matrix[row][column],
+        (row, column, value) => {
+          basicState.matrix[row][column] = value;
+          renderBasic();
+        }
+      );
+    }
+
+    function renderBasicPlot() {
+      const svg = byId("basicVectorPlot");
+
+      const matrix = basicState.matrix;
+      const v1 = [matrix[0][0], matrix[1][0]];
+      const v2 = [matrix[0][1], matrix[1][1]];
+      const sum = [v1[0] + v2[0], v1[1] + v2[1]];
+      const det = determinant(matrix);
+
+      const maximum =
+        Math.max(
+          3,
+          Math.abs(v1[0]),
+          Math.abs(v1[1]),
+          Math.abs(v2[0]),
+          Math.abs(v2[1]),
+          Math.abs(sum[0]),
+          Math.abs(sum[1])
+        );
+
+      const range = Math.ceil(maximum + 1);
+      basicState.plotRange = range;
+
+      const width = 620;
+      const height = 440;
+      const margin = 45;
+      const plotWidth = width - 2 * margin;
+      const plotHeight = height - 2 * margin;
+
+      const sx = x =>
+        margin +
+        ((x + range) / (2 * range)) *
+        plotWidth;
+
+      const sy = y =>
+        margin +
+        ((range - y) / (2 * range)) *
+        plotHeight;
+
+      const gridStep =
+        range <= 6 ? 1 :
+        range <= 12 ? 2 : 5;
+
+      let grid = "";
+
+      for (
+        let value = -range;
+        value <= range;
+        value += gridStep
+      ) {
+        grid += `
+          <line
+            x1="${sx(value)}"
+            y1="${margin}"
+            x2="${sx(value)}"
+            y2="${height - margin}"
+            stroke="#e7edf5"
+          ></line>
+
+          <line
+            x1="${margin}"
+            y1="${sy(value)}"
+            x2="${width - margin}"
+            y2="${sy(value)}"
+            stroke="#e7edf5"
+          ></line>
+
+          ${
+            value !== 0
+              ? `
+                <text
+                  x="${sx(value)}"
+                  y="${sy(0) + 18}"
+                  fill="#64748b"
+                  font-size="11"
+                  text-anchor="middle"
+                >${value}</text>
+
+                <text
+                  x="${sx(0) - 9}"
+                  y="${sy(value) + 4}"
+                  fill="#64748b"
+                  font-size="11"
+                  text-anchor="end"
+                >${value}</text>
+              `
+              : ""
+          }
+        `;
+      }
+
+      const fill =
+        isZero(det)
+          ? "rgba(100,116,139,0.12)"
+          : det > 0
+            ? "rgba(5,150,105,0.18)"
+            : "rgba(234,138,0,0.2)";
+
+      const stroke =
+        isZero(det)
+          ? "#64748b"
+          : det > 0
+            ? "#059669"
+            : "#ea8a00";
+
+      svg.innerHTML = `
+        <defs>
+          <marker
+            id="arrow-blue"
+            markerWidth="9"
+            markerHeight="9"
+            refX="7"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 8 3.5, 0 7" fill="#3157b7"></polygon>
+          </marker>
+
+          <marker
+            id="arrow-red"
+            markerWidth="9"
+            markerHeight="9"
+            refX="7"
+            refY="3.5"
+            orient="auto"
+          >
+            <polygon points="0 0, 8 3.5, 0 7" fill="#db2777"></polygon>
+          </marker>
+        </defs>
+
+        <rect
+          x="${margin}"
+          y="${margin}"
+          width="${plotWidth}"
+          height="${plotHeight}"
+          rx="8"
+          fill="#ffffff"
+          stroke="#cbd5e1"
+        ></rect>
+
+        ${grid}
+
+        <line
+          x1="${margin}"
+          y1="${sy(0)}"
+          x2="${width - margin}"
+          y2="${sy(0)}"
+          stroke="#64748b"
+          stroke-width="1.5"
+        ></line>
+
+        <line
+          x1="${sx(0)}"
+          y1="${margin}"
+          x2="${sx(0)}"
+          y2="${height - margin}"
+          stroke="#64748b"
+          stroke-width="1.5"
+        ></line>
+
+        <polygon
+          points="
+            ${sx(0)},${sy(0)}
+            ${sx(v1[0])},${sy(v1[1])}
+            ${sx(sum[0])},${sy(sum[1])}
+            ${sx(v2[0])},${sy(v2[1])}
+          "
+          fill="${fill}"
+          stroke="${stroke}"
+          stroke-width="2.5"
+        ></polygon>
+
+        <line
+          x1="${sx(v1[0])}"
+          y1="${sy(v1[1])}"
+          x2="${sx(sum[0])}"
+          y2="${sy(sum[1])}"
+          stroke="#db2777"
+          stroke-width="2"
+          stroke-dasharray="7 6"
+        ></line>
+
+        <line
+          x1="${sx(v2[0])}"
+          y1="${sy(v2[1])}"
+          x2="${sx(sum[0])}"
+          y2="${sy(sum[1])}"
+          stroke="#3157b7"
+          stroke-width="2"
+          stroke-dasharray="7 6"
+        ></line>
+
+        <line
+          x1="${sx(0)}"
+          y1="${sy(0)}"
+          x2="${sx(v1[0])}"
+          y2="${sy(v1[1])}"
+          stroke="#3157b7"
+          stroke-width="4"
+          marker-end="url(#arrow-blue)"
+        ></line>
+
+        <line
+          x1="${sx(0)}"
+          y1="${sy(0)}"
+          x2="${sx(v2[0])}"
+          y2="${sy(v2[1])}"
+          stroke="#db2777"
+          stroke-width="4"
+          marker-end="url(#arrow-red)"
+        ></line>
+
+        <circle
+          class="vector-handle"
+          data-vector="0"
+          cx="${sx(v1[0])}"
+          cy="${sy(v1[1])}"
+          r="9"
+          fill="#3157b7"
+          stroke="#ffffff"
+          stroke-width="3"
+        ></circle>
+
+        <circle
+          class="vector-handle"
+          data-vector="1"
+          cx="${sx(v2[0])}"
+          cy="${sy(v2[1])}"
+          r="9"
+          fill="#db2777"
+          stroke="#ffffff"
+          stroke-width="3"
+        ></circle>
+
+        <text
+          x="${sx(v1[0]) + 11}"
+          y="${sy(v1[1]) - 12}"
+          fill="#3157b7"
+          font-size="15"
+          font-weight="800"
+        >v₁</text>
+
+        <text
+          x="${sx(v2[0]) + 11}"
+          y="${sy(v2[1]) - 12}"
+          fill="#db2777"
+          font-size="15"
+          font-weight="800"
+        >v₂</text>
+
+        <text
+          x="${width - margin - 4}"
+          y="${sy(0) - 9}"
+          fill="#334155"
+          font-size="14"
+          text-anchor="end"
+        >x</text>
+
+        <text
+          x="${sx(0) + 10}"
+          y="${margin + 14}"
+          fill="#334155"
+          font-size="14"
+        >y</text>
+      `;
+    }
+
+    function renderBasic() {
+      syncMatrixEditor(
+        byId("basicMatrixEditor"),
+        (row, column) =>
+          basicState.matrix[row][column]
+      );
+
+      renderBasicPlot();
+
+      const [[a, b], [c, d]] = basicState.matrix;
+      const det = determinant(basicState.matrix);
+      const area = Math.abs(det);
+
+      byId("basicFormula").innerHTML = `
+        <div class="matrix-equation">
+          <span>det A =</span>
+          ${matrixHTML(basicState.matrix)}
+          <span>
+            = (${formatNumber(a)})(${formatNumber(d)})
+            − (${formatNumber(b)})(${formatNumber(c)})
+            = <strong>${formatNumber(det)}</strong>
+          </span>
+        </div>
+      `;
+
+      const orientation =
+        isZero(det)
+          ? "Collapsed"
+          : det > 0
+            ? "Positive"
+            : "Reversed";
+
+      byId("basicMetrics").innerHTML = `
+        <div class="metric">
+          <div class="metric-label">Signed determinant</div>
+          <div class="metric-value">${formatNumber(det)}</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">Parallelogram area</div>
+          <div class="metric-value">${formatNumber(area)}</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">Orientation</div>
+          <div class="metric-value">${orientation}</div>
+        </div>
+      `;
+
+      if (isZero(det)) {
+        setStatus(
+          byId("basicStatus"),
+          "warn",
+          "The matrix is singular",
+          `
+            The two column vectors are linearly dependent. The
+            parallelogram has zero area, A has no inverse, and the
+            corresponding transformation collapses the plane into a
+            lower-dimensional set.
+          `
+        );
+
+        byId("basicInverse").innerHTML = `
+          <div class="status warn">
+            <strong>No inverse exists</strong>
+            The formula requires division by det A, but det A = 0.
+          </div>
+        `;
+      } else {
+        setStatus(
+          byId("basicStatus"),
+          "good",
+          "The matrix is nonsingular",
+          `
+            Since det A = ${formatNumber(det)} ≠ 0, the columns are
+            independent and A has an inverse.
+          `
+        );
+
+        const inverse = [
+          [d / det, -b / det],
+          [-c / det, a / det]
+        ];
+
+        byId("basicInverse").innerHTML = `
+          <div class="matrix-equation">
+            <span>A<sup>−1</sup> =</span>
+
+            <span>
+              1/${formatNumber(det)}
+            </span>
+
+            ${matrixHTML([
+              [d, -b],
+              [-c, a]
+            ])}
+
+            <span>=</span>
+            ${matrixHTML(inverse)}
+          </div>
+        `;
+      }
+    }
+
+    function basicPlotCoordinates(event) {
+      const svg = byId("basicVectorPlot");
+      const rect = svg.getBoundingClientRect();
+
+      const viewX =
+        ((event.clientX - rect.left) / rect.width) * 620;
+
+      const viewY =
+        ((event.clientY - rect.top) / rect.height) * 440;
+
+      const margin = 45;
+      const plotWidth = 620 - 2 * margin;
+      const plotHeight = 440 - 2 * margin;
+      const range = basicState.plotRange;
+
+      const x =
+        -range +
+        ((viewX - margin) / plotWidth) * 2 * range;
+
+      const y =
+        range -
+        ((viewY - margin) / plotHeight) * 2 * range;
+
+      return {
+        x: clamp(x, -range, range),
+        y: clamp(y, -range, range)
+      };
+    }
+
+    byId("basicVectorPlot").addEventListener(
+      "pointerdown",
+      event => {
+        const handle =
+          event.target.closest("[data-vector]");
+
+        if (!handle) return;
+
+        event.preventDefault();
+
+        basicState.draggingVector =
+          Number(handle.dataset.vector);
+
+        byId("basicVectorPlot").setPointerCapture(
+          event.pointerId
+        );
+      }
+    );
+
+    byId("basicVectorPlot").addEventListener(
+      "pointermove",
+      event => {
+        if (basicState.draggingVector === null) return;
+
+        event.preventDefault();
+
+        const point = basicPlotCoordinates(event);
+        const snap = event.shiftKey ? 1 : 0.25;
+
+        const x =
+          Math.round(point.x / snap) * snap;
+
+        const y =
+          Math.round(point.y / snap) * snap;
+
+        const column = basicState.draggingVector;
+
+        basicState.matrix[0][column] =
+          cleanNumber(x);
+
+        basicState.matrix[1][column] =
+          cleanNumber(y);
+
+        renderBasic();
+      }
+    );
+
+    for (
+      const eventName of ["pointerup", "pointercancel"]
+    ) {
+      byId("basicVectorPlot").addEventListener(
+        eventName,
+        () => {
+          basicState.draggingVector = null;
+        }
+      );
+    }
+
+    for (
+      const button of
+      document.querySelectorAll("[data-basic-preset]")
+    ) {
+      button.addEventListener("click", () => {
+        basicState.matrix =
+          deepCopy(
+            BASIC_PRESETS[button.dataset.basicPreset]
+          );
+
+        mountBasicEditor();
+        renderBasic();
+      });
+    }
+
+    /* ============================================================
+       COFACTOR LAB
+    ============================================================ */
+
+    const COFACTOR_PRESETS = {
+      example: [
+        [2, 1, 3],
+        [1, -1, 1],
+        [1, 4, -2]
+      ],
+
+      triangular: [
+        [3, -7, 8],
+        [0, 2, -5],
+        [0, 0, -2]
+      ],
+
+      zeros: [
+        [2, 0, 0],
+        [3, -1, 4],
+        [0, 5, 2]
+      ]
+    };
+
+    const cofactorState = {
+      matrix: deepCopy(COFACTOR_PRESETS.example),
+      selectedRow: 0,
+      selectedColumn: 0,
+      expansionAxis: "row",
+      expansionIndex: 0
+    };
+
+    function mountCofactorEditor() {
+      mountMatrixEditor(
+        byId("cofactorMatrixEditor"),
+        3,
+        3,
+        (row, column) =>
+          cofactorState.matrix[row][column],
+        (row, column, value) => {
+          cofactorState.matrix[row][column] = value;
+          renderCofactor();
+        }
+      );
+    }
+
+    function renderCofactorClickable() {
+      const selectedRow = cofactorState.selectedRow;
+      const selectedColumn = cofactorState.selectedColumn;
+
+      byId("cofactorClickable").innerHTML = `
+        <span class="matrix click-matrix">
+          <table>
+            <tbody>
+              ${cofactorState.matrix.map((row, i) => `
+                <tr>
+                  ${row.map((value, j) => {
+                    const selected =
+                      i === selectedRow &&
+                      j === selectedColumn;
+
+                    const deleted =
+                      i === selectedRow ||
+                      j === selectedColumn;
+
+                    const cellClass =
+                      selected
+                        ? "selected"
+                        : deleted
+                          ? "deleted"
+                          : "minor-cell";
+
+                    return `
+                      <td>
+                        <button
+                          type="button"
+                          class="click-cell ${cellClass}"
+                          data-cofactor-row="${i}"
+                          data-cofactor-column="${j}"
+                          aria-label="Select entry row ${i + 1}, column ${j + 1}"
+                        >
+                          ${formatNumber(value)}
+                        </button>
+                      </td>
+                    `;
+                  }).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </span>
+      `;
+    }
+
+    function renderExpansionButtons() {
+      const buttons = [];
+
+      for (let index = 0; index < 3; index++) {
+        buttons.push(`
+          <button
+            type="button"
+            class="expansion-button ${
+              cofactorState.expansionAxis === "row" &&
+              cofactorState.expansionIndex === index
+                ? "active"
+                : ""
+            }"
+            data-expansion-axis="row"
+            data-expansion-index="${index}"
+          >
+            Row ${index + 1}
+          </button>
+        `);
+      }
+
+      for (let index = 0; index < 3; index++) {
+        buttons.push(`
+          <button
+            type="button"
+            class="expansion-button ${
+              cofactorState.expansionAxis === "column" &&
+              cofactorState.expansionIndex === index
+                ? "active"
+                : ""
+            }"
+            data-expansion-axis="column"
+            data-expansion-index="${index}"
+          >
+            Column ${index + 1}
+          </button>
+        `);
+      }
+
+      byId("cofactorExpansionButtons").innerHTML =
+        buttons.join("");
+    }
+
+    function bestExpansionRecommendation() {
+      const matrix = cofactorState.matrix;
+      const choices = [];
+
+      for (let row = 0; row < 3; row++) {
+        choices.push({
+          label: `row ${row + 1}`,
+          axis: "row",
+          index: row,
+          zeros: matrix[row].filter(isZero).length
+        });
+      }
+
+      for (let column = 0; column < 3; column++) {
+        choices.push({
+          label: `column ${column + 1}`,
+          axis: "column",
+          index: column,
+          zeros:
+            matrix.filter(row =>
+              isZero(row[column])
+            ).length
+        });
+      }
+
+      const maximum =
+        Math.max(...choices.map(choice => choice.zeros));
+
+      return choices.filter(
+        choice => choice.zeros === maximum
+      );
+    }
+
+    function renderCofactorExpansion() {
+      const matrix = cofactorState.matrix;
+      const cofactors = cofactorMatrix(matrix);
+
+      const positions =
+        cofactorState.expansionAxis === "row"
+          ? [0, 1, 2].map(column => ({
+              row: cofactorState.expansionIndex,
+              column
+            }))
+          : [0, 1, 2].map(row => ({
+              row,
+              column: cofactorState.expansionIndex
+            }));
+
+      const terms = positions.map(position => {
+        const entry =
+          matrix[position.row][position.column];
+
+        const cof =
+          cofactors[position.row][position.column];
+
+        return {
+          ...position,
+          entry,
+          cofactor: cof,
+          product: cleanNumber(entry * cof)
+        };
+      });
+
+      const total =
+        terms.reduce(
+          (sum, term) => sum + term.product,
+          0
+        );
+
+      byId("cofactorExpansion").innerHTML = `
+        <div class="term-grid">
+          ${terms.map(term => `
+            <div class="term-card">
+              <div class="term-name">
+                a<sub>${term.row + 1}${term.column + 1}</sub>
+                C<sub>${term.row + 1}${term.column + 1}</sub>
+              </div>
+
+              <div class="term-value">
+                (${formatNumber(term.entry)})
+                (${formatNumber(term.cofactor)})
+                =
+                ${formatNumber(term.product)}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="formula-box">
+          det A =
+          ${terms.map(term =>
+            `(${formatNumber(term.product)})`
+          ).join(" + ")}
+          =
+          <strong>${formatNumber(total)}</strong>
+        </div>
+      `;
+
+      const recommendations =
+        bestExpansionRecommendation();
+
+      byId("cofactorRecommendation").innerHTML = `
+        <div class="status info">
+          <strong>Efficient expansion suggestion</strong>
+          ${
+            recommendations[0].zeros === 0
+              ? `
+                No row or column contains a zero. Any expansion has
+                three nonzero terms.
+              `
+              : `
+                Consider expanding along
+                ${recommendations.map(item =>
+                  `<strong>${item.label}</strong>`
+                ).join(" or ")}.
+                It contains
+                ${recommendations[0].zeros}
+                zero entr${recommendations[0].zeros === 1 ? "y" : "ies"}.
+              `
+          }
+        </div>
+      `;
+    }
+
+    function renderSarrus() {
+      const a = cofactorState.matrix;
+
+      const positive = [
+        a[0][0] * a[1][1] * a[2][2],
+        a[2][0] * a[0][1] * a[1][2],
+        a[1][0] * a[2][1] * a[0][2]
+      ].map(cleanNumber);
+
+      const negative = [
+        a[2][0] * a[1][1] * a[0][2],
+        a[1][0] * a[0][1] * a[2][2],
+        a[0][0] * a[1][2] * a[2][1]
+      ].map(cleanNumber);
+
+      const positiveSum =
+        positive.reduce((sum, value) => sum + value, 0);
+
+      const negativeSum =
+        negative.reduce((sum, value) => sum + value, 0);
+
+      byId("sarrusDisplay").innerHTML = `
+        <div class="sarrus-columns">
+          <div class="sarrus-group positive">
+            <strong>Positive products</strong>
+
+            <div style="margin-top:7px">
+              ${positive.map(formatNumber).join(" + ")}
+              =
+              ${formatNumber(positiveSum)}
+            </div>
+          </div>
+
+          <div class="sarrus-group negative">
+            <strong>Products to subtract</strong>
+
+            <div style="margin-top:7px">
+              ${negative.map(formatNumber).join(" + ")}
+              =
+              ${formatNumber(negativeSum)}
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          det A =
+          ${formatNumber(positiveSum)}
+          −
+          ${formatNumber(negativeSum)}
+          =
+          <strong>
+            ${formatNumber(positiveSum - negativeSum)}
+          </strong>
+        </div>
+      `;
+    }
+
+    function renderCofactor() {
+      syncMatrixEditor(
+        byId("cofactorMatrixEditor"),
+        (row, column) =>
+          cofactorState.matrix[row][column]
+      );
+
+      renderCofactorClickable();
+      renderExpansionButtons();
+      renderCofactorExpansion();
+      renderSarrus();
+
+      byId("cofactorSigns").innerHTML = `
+        <span class="matrix sign-board">
+          <table>
+            <tr>
+              <td class="sign-plus">+</td>
+              <td class="sign-minus">−</td>
+              <td class="sign-plus">+</td>
+            </tr>
+
+            <tr>
+              <td class="sign-minus">−</td>
+              <td class="sign-plus">+</td>
+              <td class="sign-minus">−</td>
+            </tr>
+
+            <tr>
+              <td class="sign-plus">+</td>
+              <td class="sign-minus">−</td>
+              <td class="sign-plus">+</td>
+            </tr>
+          </table>
+        </span>
+      `;
+
+      const row = cofactorState.selectedRow;
+      const column = cofactorState.selectedColumn;
+      const minor = minorMatrix(
+        cofactorState.matrix,
+        row,
+        column
+      );
+
+      const minorDet = determinant(minor);
+      const sign =
+        (row + column) % 2 === 0 ? 1 : -1;
+
+      const cof = sign * minorDet;
+
+      byId("cofactorDetails").innerHTML = `
+        <div class="formula-box">
+          Delete row ${row + 1} and column ${column + 1}.
+        </div>
+
+        <div class="matrix-equation">
+          <span>
+            A<sub>${row + 1}${column + 1}</sub>
+            =
+          </span>
+
+          ${matrixHTML(minor)}
+        </div>
+
+        <div class="formula-box">
+          det A<sub>${row + 1}${column + 1}</sub>
+          =
+          ${formatNumber(minorDet)}
+        </div>
+
+        <div class="formula-box">
+          C<sub>${row + 1}${column + 1}</sub>
+          =
+          (−1)<sup>${row + column + 2}</sup>
+          det A<sub>${row + 1}${column + 1}</sub>
+          =
+          (${sign})(${formatNumber(minorDet)})
+          =
+          <strong>${formatNumber(cof)}</strong>
+        </div>
+      `;
+    }
+
+    byId("cofactorClickable").addEventListener(
+      "click",
+      event => {
+        const cell =
+          event.target.closest("[data-cofactor-row]");
+
+        if (!cell) return;
+
+        cofactorState.selectedRow =
+          Number(cell.dataset.cofactorRow);
+
+        cofactorState.selectedColumn =
+          Number(cell.dataset.cofactorColumn);
+
+        renderCofactor();
+      }
+    );
+
+    byId("cofactorExpansionButtons").addEventListener(
+      "click",
+      event => {
+        const button =
+          event.target.closest("[data-expansion-axis]");
+
+        if (!button) return;
+
+        cofactorState.expansionAxis =
+          button.dataset.expansionAxis;
+
+        cofactorState.expansionIndex =
+          Number(button.dataset.expansionIndex);
+
+        renderCofactor();
+      }
+    );
+
+    for (
+      const button of
+      document.querySelectorAll("[data-cofactor-preset]")
+    ) {
+      button.addEventListener("click", () => {
+        const preset = button.dataset.cofactorPreset;
+
+        if (preset === "random") {
+          cofactorState.matrix =
+            Array.from(
+              { length: 3 },
+              () =>
+                Array.from(
+                  { length: 3 },
+                  () => randomInteger(-4, 5)
+                )
+            );
+        } else {
+          cofactorState.matrix =
+            deepCopy(COFACTOR_PRESETS[preset]);
+        }
+
+        mountCofactorEditor();
+        renderCofactor();
+      });
+    }
+
+    /* ============================================================
+       ROW AND COLUMN OPERATION LAB
+    ============================================================ */
+
+    const ROW_EXAMPLE_4 = [
+      [2, -8, 6, 8],
+      [3, -9, 5, 10],
+      [-3, 0, 1, -2],
+      [1, -4, 0, 6]
+    ];
+
+    const ROW_EXAMPLE_3 = [
+      [2, 1, 3],
+      [1, -1, 1],
+      [1, 4, -2]
+    ];
+
+    const rowState = {
+      n: 4,
+      matrix: deepCopy(ROW_EXAMPLE_4),
+      initialMatrix: deepCopy(ROW_EXAMPLE_4),
+      multiplier: 1,
+      history: [],
+      autoRunning: false,
+      autoTimeout: null
+    };
+
+    const subscriptDigits = [
+      "₀", "₁", "₂", "₃", "₄",
+      "₅", "₆", "₇", "₈", "₉"
+    ];
+
+    function subscript(number) {
+      return String(number)
+        .split("")
+        .map(digit => subscriptDigits[Number(digit)])
+        .join("");
+    }
+
+    function mountRowEditor() {
+      mountMatrixEditor(
+        byId("rowMatrixEditor"),
+        rowState.n,
+        rowState.n,
+        (row, column) =>
+          rowState.matrix[row][column],
+        (row, column, value) => {
+          stopAutoElimination();
+
+          rowState.matrix[row][column] = value;
+          rowState.initialMatrix =
+            deepCopy(rowState.matrix);
+
+          rowState.multiplier = 1;
+          rowState.history = [];
+
+          renderRowLab();
+        }
+      );
+    }
+
+    function refreshOperationSelectors() {
+      const options = Array.from(
+        { length: rowState.n },
+        (_, index) => `
+          <option value="${index}">
+            ${index + 1}
+          </option>
+        `
+      ).join("");
+
+      byId("opTarget").innerHTML = options;
+      byId("opSource").innerHTML = options;
+
+      byId("opTarget").value = "0";
+      byId("opSource").value =
+        rowState.n > 1 ? "1" : "0";
+
+      renderOperationPreview();
+    }
+
+    function operationLabel(operation) {
+      const symbol =
+        operation.axis === "row" ? "R" : "C";
+
+      const target =
+        `${symbol}${subscript(operation.target + 1)}`;
+
+      const source =
+        `${symbol}${subscript(operation.source + 1)}`;
+
+      if (operation.type === "swap") {
+        return `${target} ↔ ${source}`;
+      }
+
+      if (operation.type === "scale") {
+        return (
+          `${target} ← ` +
+          `${formatNumber(operation.k)}${target}`
+        );
+      }
+
+      const magnitude = Math.abs(operation.k);
+
+      const coefficient =
+        approximatelyEqual(magnitude, 1)
+          ? ""
+          : formatNumber(magnitude);
+
+      const sign =
+        operation.k >= 0 ? "+" : "−";
+
+      return (
+        `${target} ← ${target} ${sign} ` +
+        `${coefficient}${source}`
+      );
+    }
+
+    function operationFromControls() {
+      return {
+        axis: byId("opAxis").value,
+        type: byId("opType").value,
+        target: Number(byId("opTarget").value),
+        source: Number(byId("opSource").value),
+        k: parseScalar(byId("opK").value)
+      };
+    }
+
+    function renderOperationPreview() {
+      const axis = byId("opAxis").value;
+      const type = byId("opType").value;
+
+      byId("opTargetLabel").textContent =
+        axis === "row" ? "Target row" : "Target column";
+
+      byId("opSourceLabel").textContent =
+        axis === "row" ? "Source row" : "Source column";
+
+      byId("opSourceGroup").hidden =
+        type === "scale";
+
+      byId("opKGroup").hidden =
+        type === "swap";
+
+      const operation = operationFromControls();
+
+      let effect;
+
+      if (type === "replace") {
+        effect = "determinant unchanged";
+      } else if (type === "scale") {
+        effect =
+          Number.isFinite(operation.k)
+            ? `new determinant = ${formatNumber(operation.k)} × old determinant`
+            : "enter a valid nonzero scalar";
+      } else {
+        effect = "new determinant = − old determinant";
+      }
+
+      byId("opPreview").innerHTML = `
+        ${escapeHTML(operationLabel(operation))}
+        <br>
+        <span class="small-note">${effect}</span>
+      `;
+    }
+
+    function applyOperationToMatrix(matrix, operation) {
+      const result = deepCopy(matrix);
+      const { axis, type, target, source, k } = operation;
+
+      if (type === "swap") {
+        if (axis === "row") {
+          [result[target], result[source]] =
+            [result[source], result[target]];
+        } else {
+          for (let row = 0; row < rowState.n; row++) {
+            [
+              result[row][target],
+              result[row][source]
+            ] = [
+              result[row][source],
+              result[row][target]
+            ];
+          }
+        }
+      }
+
+      if (type === "scale") {
+        if (axis === "row") {
+          result[target] =
+            result[target].map(value =>
+              cleanNumber(value * k)
+            );
+        } else {
+          for (let row = 0; row < rowState.n; row++) {
+            result[row][target] =
+              cleanNumber(result[row][target] * k);
+          }
+        }
+      }
+
+      if (type === "replace") {
+        if (axis === "row") {
+          result[target] =
+            result[target].map(
+              (value, column) =>
+                cleanNumber(
+                  value + k * result[source][column]
+                )
+            );
+        } else {
+          for (let row = 0; row < rowState.n; row++) {
+            result[row][target] =
+              cleanNumber(
+                result[row][target] +
+                k * result[row][source]
+              );
+          }
+        }
+      }
+
+      return result;
+    }
+
+    function performOperation(operation, fromAuto = false) {
+      if (
+        operation.type !== "scale" &&
+        operation.target === operation.source
+      ) {
+        setStatus(
+          byId("rowActionMessage"),
+          "warn",
+          "Choose two different rows or columns",
+          "The target and source cannot be the same for this operation."
+        );
+
+        return false;
+      }
+
+      if (
+        operation.type !== "swap" &&
+        !Number.isFinite(operation.k)
+      ) {
+        setStatus(
+          byId("rowActionMessage"),
+          "warn",
+          "Invalid scalar",
+          "Please enter a valid number or fraction."
+        );
+
+        return false;
+      }
+
+      if (
+        operation.type === "scale" &&
+        isZero(operation.k)
+      ) {
+        setStatus(
+          byId("rowActionMessage"),
+          "warn",
+          "Use a nonzero scale factor",
+          "Elementary row scaling requires k ≠ 0."
+        );
+
+        return false;
+      }
+
+      const beforeMatrix =
+        deepCopy(rowState.matrix);
+
+      const beforeMultiplier =
+        rowState.multiplier;
+
+      const beforeDet =
+        determinant(beforeMatrix);
+
+      const afterMatrix =
+        applyOperationToMatrix(
+          beforeMatrix,
+          operation
+        );
+
+      const afterDet =
+        determinant(afterMatrix);
+
+      let factor = 1;
+
+      if (operation.type === "swap") factor = -1;
+      if (operation.type === "scale") factor = operation.k;
+
+      rowState.matrix = afterMatrix;
+      rowState.multiplier =
+        cleanNumber(rowState.multiplier * factor);
+
+      rowState.history.push({
+        operation,
+        label: operationLabel(operation),
+        beforeMatrix,
+        beforeMultiplier,
+        beforeDet,
+        afterDet,
+        factor
+      });
+
+      syncMatrixEditor(
+        byId("rowMatrixEditor"),
+        (row, column) =>
+          rowState.matrix[row][column]
+      );
+
+      setStatus(
+        byId("rowActionMessage"),
+        "good",
+        fromAuto
+          ? "Automatic elimination step"
+          : "Operation applied",
+        `
+          ${escapeHTML(operationLabel(operation))}.
+          The determinant changed from
+          ${formatNumber(beforeDet)}
+          to
+          ${formatNumber(afterDet)}.
+        `
+      );
+
+      renderRowLab();
+      return true;
+    }
+
+    function renderRowLab() {
+      syncMatrixEditor(
+        byId("rowMatrixEditor"),
+        (row, column) =>
+          rowState.matrix[row][column]
+      );
+
+      const initialDet =
+        determinant(rowState.initialMatrix);
+
+      const currentDet =
+        determinant(rowState.matrix);
+
+      const predicted =
+        cleanNumber(
+          rowState.multiplier * initialDet
+        );
+
+      const upper =
+        isUpperTriangular(rowState.matrix);
+
+      const lower =
+        isLowerTriangular(rowState.matrix);
+
+      const triangular = upper || lower;
+
+      const diagonalProduct =
+        rowState.matrix.reduce(
+          (product, row, index) =>
+            product * row[index],
+          1
+        );
+
+      byId("rowCurrentMatrix").innerHTML = `
+        <div class="matrix-equation">
+          <span>A<sub>current</sub> =</span>
+          ${matrixHTML(rowState.matrix)}
+        </div>
+      `;
+
+      byId("rowTracker").innerHTML = `
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="metric-label">Original det</div>
+            <div class="metric-value">
+              ${formatNumber(initialDet)}
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Accumulated factor</div>
+            <div class="metric-value">
+              ${formatNumber(rowState.multiplier)}
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Current det</div>
+            <div class="metric-value">
+              ${formatNumber(currentDet)}
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          Predicted current determinant =
+          (${formatNumber(rowState.multiplier)})
+          (${formatNumber(initialDet)})
+          =
+          <strong>${formatNumber(predicted)}</strong>
+        </div>
+
+        ${
+          triangular
+            ? `
+              <div class="formula-box">
+                The current matrix is
+                ${upper && lower
+                  ? "diagonal"
+                  : upper
+                    ? "upper triangular"
+                    : "lower triangular"}.
+
+                Therefore,
+
+                det A<sub>current</sub>
+                =
+                product of diagonal entries
+                =
+                <strong>
+                  ${formatNumber(diagonalProduct)}
+                </strong>.
+              </div>
+            `
+            : ""
+        }
+      `;
+
+      if (
+        approximatelyEqual(
+          currentDet,
+          predicted,
+          1e-6
+        )
+      ) {
+        setStatus(
+          byId("rowStatus"),
+          "good",
+          "Determinant bookkeeping is consistent",
+          `
+            The measured determinant agrees with the determinant
+            predicted by the elementary-operation rules.
+            The current matrix is
+            <strong>
+              ${isZero(currentDet)
+                ? "singular"
+                : "nonsingular"}
+            </strong>.
+          `
+        );
+      } else {
+        setStatus(
+          byId("rowStatus"),
+          "warn",
+          "Numerical discrepancy detected",
+          "Check the entered values or operation sequence."
+        );
+      }
+
+      if (!rowState.history.length) {
+        byId("rowHistory").innerHTML = `
+          <div class="small-note">
+            No operations have been applied.
+          </div>
+        `;
+      } else {
+        byId("rowHistory").innerHTML =
+          rowState.history.map((item, index) => `
+            <div class="history-item">
+              <div class="history-number">${index + 1}</div>
+
+              <div>
+                <strong>${escapeHTML(item.label)}</strong><br>
+                <span class="small-note">
+                  det:
+                  ${formatNumber(item.beforeDet)}
+                  →
+                  ${formatNumber(item.afterDet)}
+                </span>
+              </div>
+
+              <div>
+                × ${formatNumber(item.factor)}
+              </div>
+            </div>
+          `).join("");
+      }
+
+      byId("undoOperation").disabled =
+        rowState.history.length === 0;
+
+      byId("autoEliminate").textContent =
+        rowState.autoRunning
+          ? "Stop automatic steps"
+          : "Auto-triangularise";
+    }
+
+    function loadRowMatrix(matrix) {
+      stopAutoElimination();
+
+      rowState.n = matrix.length;
+      rowState.matrix = deepCopy(matrix);
+      rowState.initialMatrix = deepCopy(matrix);
+      rowState.multiplier = 1;
+      rowState.history = [];
+
+      byId("rowDimension").value =
+        String(rowState.n);
+
+      mountRowEditor();
+      refreshOperationSelectors();
+      renderRowLab();
+    }
+
+    function randomNonsingularMatrix(n) {
+      for (let attempt = 0; attempt < 200; attempt++) {
+        const matrix =
+          Array.from(
+            { length: n },
+            () =>
+              Array.from(
+                { length: n },
+                () => randomInteger(-5, 6)
+              )
+          );
+
+        if (!isZero(determinant(matrix))) {
+          return matrix;
+        }
+      }
+
+      return identityMatrix(n);
+    }
+
+    function createEliminationPlan(matrix) {
+      const simulation = deepCopy(matrix);
+      const n = simulation.length;
+      const operations = [];
+
+      for (let column = 0; column < n; column++) {
+        let pivot = column;
+
+        for (let row = column + 1; row < n; row++) {
+          if (
+            Math.abs(simulation[row][column]) >
+            Math.abs(simulation[pivot][column])
+          ) {
+            pivot = row;
+          }
+        }
+
+        if (isZero(simulation[pivot][column])) {
+          continue;
+        }
+
+        if (pivot !== column) {
+          const operation = {
+            axis: "row",
+            type: "swap",
+            target: column,
+            source: pivot,
+            k: 1
+          };
+
+          operations.push(operation);
+
+          const updated =
+            applyOperationToMatrix(
+              simulation,
+              operation
+            );
+
+          for (let i = 0; i < n; i++) {
+            simulation[i] = updated[i];
+          }
+        }
+
+        for (let row = column + 1; row < n; row++) {
+          if (isZero(simulation[row][column])) {
+            continue;
+          }
+
+          const k =
+            -simulation[row][column] /
+            simulation[column][column];
+
+          const operation = {
+            axis: "row",
+            type: "replace",
+            target: row,
+            source: column,
+            k: cleanNumber(k)
+          };
+
+          operations.push(operation);
+
+          const updated =
+            applyOperationToMatrix(
+              simulation,
+              operation
+            );
+
+          for (let i = 0; i < n; i++) {
+            simulation[i] = updated[i];
+          }
+        }
+      }
+
+      return operations;
+    }
+
+    function stopAutoElimination() {
+      if (rowState.autoTimeout) {
+        clearTimeout(rowState.autoTimeout);
+      }
+
+      rowState.autoTimeout = null;
+      rowState.autoRunning = false;
+    }
+
+    function runAutoElimination() {
+      if (rowState.autoRunning) {
+        stopAutoElimination();
+        renderRowLab();
+
+        setStatus(
+          byId("rowActionMessage"),
+          "info",
+          "Automatic process stopped",
+          "You may continue manually."
+        );
+
+        return;
+      }
+
+      const plan =
+        createEliminationPlan(rowState.matrix);
+
+      if (!plan.length) {
+        setStatus(
+          byId("rowActionMessage"),
+          "info",
+          "No elimination step is needed",
+          "The current matrix is already upper triangular."
+        );
+
+        return;
+      }
+
+      rowState.autoRunning = true;
+      let index = 0;
+      renderRowLab();
+
+      const next = () => {
+        if (!rowState.autoRunning) return;
+
+        if (index >= plan.length) {
+          rowState.autoRunning = false;
+          rowState.autoTimeout = null;
+          renderRowLab();
+
+          setStatus(
+            byId("rowActionMessage"),
+            "good",
+            "Upper triangular form reached",
+            `
+              Multiply the diagonal entries to obtain the current
+              determinant, then account for any row interchanges or
+              scalings.
+            `
+          );
+
+          return;
+        }
+
+        performOperation(plan[index], true);
+        index++;
+
+        rowState.autoTimeout =
+          setTimeout(next, 650);
+      };
+
+      next();
+    }
+
+    for (
+      const input of [
+        byId("opAxis"),
+        byId("opType"),
+        byId("opTarget"),
+        byId("opSource"),
+        byId("opK")
+      ]
+    ) {
+      input.addEventListener(
+        input.tagName === "INPUT" ? "input" : "change",
+        renderOperationPreview
+      );
+    }
+
+    byId("applyOperation").addEventListener(
+      "click",
+      () => {
+        stopAutoElimination();
+        performOperation(operationFromControls());
+      }
+    );
+
+    byId("undoOperation").addEventListener(
+      "click",
+      () => {
+        stopAutoElimination();
+
+        const item = rowState.history.pop();
+
+        if (!item) return;
+
+        rowState.matrix =
+          deepCopy(item.beforeMatrix);
+
+        rowState.multiplier =
+          item.beforeMultiplier;
+
+        syncMatrixEditor(
+          byId("rowMatrixEditor"),
+          (row, column) =>
+            rowState.matrix[row][column]
+        );
+
+        setStatus(
+          byId("rowActionMessage"),
+          "info",
+          "Last operation removed",
+          `${escapeHTML(item.label)} was undone.`
+        );
+
+        renderRowLab();
+      }
+    );
+
+    byId("autoEliminate").addEventListener(
+      "click",
+      runAutoElimination
+    );
+
+    byId("restoreRowBase").addEventListener(
+      "click",
+      () => {
+        stopAutoElimination();
+
+        rowState.matrix =
+          deepCopy(rowState.initialMatrix);
+
+        rowState.multiplier = 1;
+        rowState.history = [];
+
+        syncMatrixEditor(
+          byId("rowMatrixEditor"),
+          (row, column) =>
+            rowState.matrix[row][column]
+        );
+
+        renderRowLab();
+
+        setStatus(
+          byId("rowActionMessage"),
+          "info",
+          "Original matrix restored",
+          "All applied operations have been cleared."
+        );
+      }
+    );
+
+    byId("rowDimension").addEventListener(
+      "change",
+      event => {
+        const n = Number(event.target.value);
+
+        loadRowMatrix(
+          n === 4
+            ? ROW_EXAMPLE_4
+            : ROW_EXAMPLE_3
+        );
+      }
+    );
+
+    for (
+      const button of
+      document.querySelectorAll("[data-row-preset]")
+    ) {
+      button.addEventListener("click", () => {
+        const preset = button.dataset.rowPreset;
+
+        if (preset === "example") {
+          loadRowMatrix(ROW_EXAMPLE_4);
+          return;
+        }
+
+        if (preset === "triangular") {
+          const n = rowState.n;
+
+          const matrix =
+            Array.from(
+              { length: n },
+              (_, row) =>
+                Array.from(
+                  { length: n },
+                  (_, column) =>
+                    column < row
+                      ? 0
+                      : randomInteger(-4, 6)
+                )
+            );
+
+          loadRowMatrix(matrix);
+          return;
+        }
+
+        loadRowMatrix(
+          randomNonsingularMatrix(rowState.n)
+        );
+      });
+    }
+
+    /* ============================================================
+       PROPERTY CALCULATOR
+    ============================================================ */
+
+    function renderPropertyCalculator() {
+      const n =
+        clamp(
+          Math.round(Number(byId("propN").value)),
+          2,
+          10
+        );
+
+      const detA =
+        parseScalar(byId("propDet").value);
+
+      const k =
+        parseScalar(byId("propK").value);
+
+      if (
+        !Number.isFinite(detA) ||
+        !Number.isFinite(k)
+      ) {
+        setStatus(
+          byId("propertyStatus"),
+          "warn",
+          "Enter valid values",
+          "The determinant and scalar must be real numbers."
+        );
+
+        return;
+      }
+
+      const results = [
+        {
+          formula: "det(Aᵀ) = det A",
+          answer: detA
+        },
+        {
+          formula: "det(kA) = kⁿ det A",
+          answer: Math.pow(k, n) * detA
+        },
+        {
+          formula: "det(A³) = (det A)³",
+          answer: Math.pow(detA, 3)
+        },
+        {
+          formula: "det(AAᵀ) = (det A)²",
+          answer: Math.pow(detA, 2)
+        },
+        {
+          formula: "det(A⁻¹) = 1/det A",
+          answer: isZero(detA)
+            ? null
+            : 1 / detA
+        },
+        {
+          formula: "det(adj A) = (det A)ⁿ⁻¹",
+          answer: Math.pow(detA, n - 1)
+        }
+      ];
+
+      byId("propertyResults").innerHTML =
+        results.map(result => `
+          <div class="property-card">
+            <div class="property-formula">
+              ${result.formula}
+            </div>
+
+            <div class="property-answer">
+              ${
+                result.answer === null
+                  ? "undefined"
+                  : formatNumber(result.answer)
+              }
+            </div>
+          </div>
+        `).join("");
+
+      if (isZero(detA)) {
+        setStatus(
+          byId("propertyStatus"),
+          "warn",
+          "A is singular",
+          `
+            Since det A = 0, A<sup>−1</sup> does not exist.
+            The other determinant identities remain applicable.
+          `
+        );
+      } else {
+        setStatus(
+          byId("propertyStatus"),
+          "good",
+          "A is nonsingular",
+          `
+            Since det A = ${formatNumber(detA)} ≠ 0,
+            the inverse determinant is
+            ${formatNumber(1 / detA)}.
+          `
+        );
+      }
+    }
+
+    for (
+      const input of [
+        byId("propN"),
+        byId("propDet"),
+        byId("propK")
+      ]
+    ) {
+      input.addEventListener(
+        "input",
+        renderPropertyCalculator
+      );
+    }
+
+    /* ============================================================
+       ADJUGATE LAB
+    ============================================================ */
+
+    const ADJ_PRESETS = {
+      example3: [
+        [2, 1, 3],
+        [1, -1, 1],
+        [1, 4, -2]
+      ],
+
+      example2: [
+        [1, 2],
+        [3, 4]
+      ],
+
+      singular: [
+        [2, 4, 1],
+        [1, 2, 3],
+        [3, 6, 4]
+      ]
+    };
+
+    const adjState = {
+      matrix: deepCopy(ADJ_PRESETS.example3)
+    };
+
+    function mountAdjEditor() {
+      const n = adjState.matrix.length;
+
+      mountMatrixEditor(
+        byId("adjMatrixEditor"),
+        n,
+        n,
+        (row, column) =>
+          adjState.matrix[row][column],
+        (row, column, value) => {
+          adjState.matrix[row][column] = value;
+          renderAdjugate();
+        }
+      );
+    }
+
+    function loadAdjMatrix(matrix) {
+      adjState.matrix = deepCopy(matrix);
+
+      byId("adjDimension").value =
+        String(matrix.length);
+
+      mountAdjEditor();
+      renderAdjugate();
+    }
+
+    function renderAdjugate() {
+      syncMatrixEditor(
+        byId("adjMatrixEditor"),
+        (row, column) =>
+          adjState.matrix[row][column]
+      );
+
+      const matrix = adjState.matrix;
+      const n = matrix.length;
+      const detA = determinant(matrix);
+      const cofactors = cofactorMatrix(matrix);
+      const adjugate = transpose(cofactors);
+
+      const leftProduct =
+        multiplyMatrices(matrix, adjugate);
+
+      const rightProduct =
+        multiplyMatrices(adjugate, matrix);
+
+      const target =
+        scaleMatrix(identityMatrix(n), detA);
+
+      byId("adjResults").innerHTML = `
+        <div class="stage-grid">
+          <div class="stage-card">
+            <div class="stage-number">1</div>
+            <h4>Cofactor matrix C</h4>
+            ${matrixHTML(cofactors)}
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-number">2</div>
+            <h4>Transpose C</h4>
+            <div class="small-note">adj A = Cᵀ</div>
+            ${matrixHTML(adjugate)}
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-number">3</div>
+            <h4>Determinant</h4>
+            <div class="big-result">
+              det A = ${formatNumber(detA)}
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          A adj A =
+          ${matrixHTML(leftProduct, { compact: true })}
+        </div>
+
+        <div class="formula-box">
+          adj A · A =
+          ${matrixHTML(rightProduct, { compact: true })}
+        </div>
+
+        <div class="formula-box">
+          (det A)I =
+          ${matrixHTML(target, { compact: true })}
+        </div>
+      `;
+
+      const verified =
+        matricesClose(leftProduct, target) &&
+        matricesClose(rightProduct, target);
+
+      if (isZero(detA)) {
+        setStatus(
+          byId("adjStatus"),
+          verified ? "warn" : "info",
+          "The adjugate identity still holds, but A is singular",
+          `
+            A adj A = adj A · A = 0I.
+            Since det A = 0, division by det A is impossible and
+            A<sup>−1</sup> does not exist.
+          `
+        );
+      } else {
+        const inverse =
+          scaleMatrix(adjugate, 1 / detA);
+
+        setStatus(
+          byId("adjStatus"),
+          "good",
+          "Adjugate identity verified",
+          `
+            <div>
+              A adj A = adj A · A = (det A)I.
+            </div>
+
+            <div class="matrix-equation">
+              <span>A<sup>−1</sup> =</span>
+              <span>1/${formatNumber(detA)}</span>
+              ${matrixHTML(adjugate)}
+              <span>=</span>
+              ${matrixHTML(inverse)}
+            </div>
+          `
+        );
+      }
+    }
+
+    byId("adjDimension").addEventListener(
+      "change",
+      event => {
+        loadAdjMatrix(
+          Number(event.target.value) === 2
+            ? ADJ_PRESETS.example2
+            : ADJ_PRESETS.example3
+        );
+      }
+    );
+
+    for (
+      const button of
+      document.querySelectorAll("[data-adj-preset]")
+    ) {
+      button.addEventListener("click", () => {
+        loadAdjMatrix(
+          ADJ_PRESETS[button.dataset.adjPreset]
+        );
+      });
+    }
+
+    /* ============================================================
+       CRAMER'S RULE LAB
+    ============================================================ */
+
+    const CRAMER_PRESETS = {
+      handout2: {
+        matrix: [
+          [3, -2],
+          [-5, 4]
+        ],
+        vector: [6, 8]
+      },
+
+      handout3: {
+        matrix: [
+          [1, -2, 1],
+          [0, 2, -8],
+          [-4, 5, 9]
+        ],
+        vector: [0, 8, -9]
+      },
+
+      singular: {
+        matrix: [
+          [1, 2],
+          [2, 4]
+        ],
+        vector: [3, 6]
+      }
+    };
+
+    const cramerState = {
+      matrix: deepCopy(CRAMER_PRESETS.handout2.matrix),
+      vector: [...CRAMER_PRESETS.handout2.vector]
+    };
+
+    function mountCramerEditors() {
+      const n = cramerState.matrix.length;
+
+      mountMatrixEditor(
+        byId("cramerMatrixEditor"),
+        n,
+        n,
+        (row, column) =>
+          cramerState.matrix[row][column],
+        (row, column, value) => {
+          cramerState.matrix[row][column] = value;
+          renderCramer();
+        }
+      );
+
+      mountMatrixEditor(
+        byId("cramerVectorEditor"),
+        n,
+        1,
+        row => cramerState.vector[row],
+        (row, _, value) => {
+          cramerState.vector[row] = value;
+          renderCramer();
+        }
+      );
+    }
+
+    function loadCramerSystem(matrix, vector) {
+      cramerState.matrix = deepCopy(matrix);
+      cramerState.vector = [...vector];
+
+      byId("cramerDimension").value =
+        String(matrix.length);
+
+      mountCramerEditors();
+      renderCramer();
+    }
+
+    function randomCramerSystem(n) {
+      const matrix = randomNonsingularMatrix(n);
+
+      const solution =
+        Array.from(
+          { length: n },
+          () => randomInteger(-4, 5)
+        );
+
+      const vector =
+        matrixVectorMultiply(matrix, solution);
+
+      return { matrix, vector };
+    }
+
+    function renderCramer() {
+      const matrix = cramerState.matrix;
+      const vector = cramerState.vector;
+      const n = matrix.length;
+      const detA = determinant(matrix);
+
+      syncMatrixEditor(
+        byId("cramerMatrixEditor"),
+        (row, column) =>
+          cramerState.matrix[row][column]
+      );
+
+      syncMatrixEditor(
+        byId("cramerVectorEditor"),
+        row => cramerState.vector[row]
+      );
+
+      const cases =
+        Array.from(
+          { length: n },
+          (_, column) => {
+            const replaced =
+              replaceColumn(
+                matrix,
+                column,
+                vector
+              );
+
+            const detReplaced =
+              determinant(replaced);
+
+            return {
+              column,
+              replaced,
+              detReplaced,
+              value:
+                isZero(detA)
+                  ? null
+                  : detReplaced / detA
+            };
+          }
+        );
+
+      byId("cramerResults").innerHTML = `
+        <div class="formula-box">
+          det A =
+          <strong>${formatNumber(detA)}</strong>
+        </div>
+
+        <div class="cramer-cases">
+          ${cases.map(item => `
+            <div class="cramer-case">
+              <h4>
+                A<sub>${item.column + 1}</sub>(b)
+              </h4>
+
+              ${matrixHTML(
+                item.replaced,
+                { compact: true }
+              )}
+
+              <div style="margin-top:8px">
+                det A<sub>${item.column + 1}</sub>(b)
+                =
+                <strong>
+                  ${formatNumber(item.detReplaced)}
+                </strong>
+              </div>
+
+              ${
+                item.value === null
+                  ? ""
+                  : `
+                    <div class="formula-box">
+                      x<sub>${item.column + 1}</sub>
+                      =
+                      ${formatNumber(item.detReplaced)}
+                      /
+                      ${formatNumber(detA)}
+                      =
+                      <strong>
+                        ${formatNumber(item.value)}
+                      </strong>
+                    </div>
+                  `
+              }
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      if (isZero(detA)) {
+        setStatus(
+          byId("cramerStatus"),
+          "warn",
+          "Cramer’s Rule is not applicable",
+          `
+            The coefficient matrix is singular because det A = 0.
+            The system may have no solution or infinitely many solutions,
+            but it cannot have a unique solution determined by Cramer’s
+            Rule.
+          `
+        );
+
+        return;
+      }
+
+      const solution =
+        cases.map(item => item.value);
+
+      const verification =
+        matrixVectorMultiply(matrix, solution);
+
+      setStatus(
+        byId("cramerStatus"),
+        "good",
+        "Unique solution obtained",
+        `
+          <div class="matrix-equation">
+            <span>x =</span>
+            ${matrixHTML(
+              solution.map(value => [value])
+            )}
+          </div>
+
+          <div class="matrix-equation">
+            <span>Ax =</span>
+            ${matrixHTML(
+              verification.map(value => [value])
+            )}
+            <span>= b</span>
+          </div>
+        `
+      );
+    }
+
+    byId("cramerDimension").addEventListener(
+      "change",
+      event => {
+        const n = Number(event.target.value);
+        const preset =
+          n === 2
+            ? CRAMER_PRESETS.handout2
+            : CRAMER_PRESETS.handout3;
+
+        loadCramerSystem(
+          preset.matrix,
+          preset.vector
+        );
+      }
+    );
+
+    for (
+      const button of
+      document.querySelectorAll("[data-cramer-preset]")
+    ) {
+      button.addEventListener("click", () => {
+        const preset =
+          button.dataset.cramerPreset;
+
+        if (preset === "random") {
+          const system =
+            randomCramerSystem(
+              cramerState.matrix.length
+            );
+
+          loadCramerSystem(
+            system.matrix,
+            system.vector
+          );
+
+          return;
+        }
+
+        const data = CRAMER_PRESETS[preset];
+
+        loadCramerSystem(
+          data.matrix,
+          data.vector
+        );
+      });
+    }
+
+    /* ============================================================
+       COMPUTATIONAL COMPLEXITY
+    ============================================================ */
+
+    function factorialBigInt(n) {
+      let result = 1n;
+
+      for (let value = 2n; value <= BigInt(n); value++) {
+        result *= value;
+      }
+
+      return result;
+    }
+
+    function renderComplexity() {
+      const n = Number(byId("complexityN").value);
+      const factorial = factorialBigInt(n);
+      const cubic = n ** 3;
+
+      byId("complexityNValue").textContent = n;
+
+      byId("factorialCount").textContent =
+        factorial.toLocaleString("en-US");
+
+      byId("eliminationCount").textContent =
+        `about ${cubic.toLocaleString("en-US")}`;
+
+      const factorialNumber = Number(factorial);
+      const ratio = factorialNumber / cubic;
+
+      byId("complexityRatio").textContent =
+        ratio < 1000000
+          ? `${formatNumber(ratio, 2)} ×`
+          : `${ratio.toExponential(2)} ×`;
+    }
+
+    byId("complexityN").addEventListener(
+      "input",
+      renderComplexity
+    );
+
+    /* ============================================================
+       QUIZ
+    ============================================================ */
+
+    function makeQuestion(
+      level,
+      topic,
+      question,
+      correct,
+      distractors,
+      explanation
+    ) {
+      return {
+        level,
+        topic,
+        question,
+        explanation,
+        options: [
+          { text: correct, correct: true },
+          ...distractors.map(text => ({
+            text,
+            correct: false
+          }))
+        ]
+      };
+    }
+
+    const QUIZ_BANK = [
+      makeQuestion(
+        "basic",
+        "2 × 2 determinant",
+        `
+          Find
+          det
+          <span class="matrix display-matrix compact">
+            <table>
+              <tr><td>2</td><td>4</td></tr>
+              <tr><td>1</td><td>2</td></tr>
+            </table>
+          </span>.
+        `,
+        "0",
+        ["2", "4", "8"],
+        "The determinant is 2(2)−4(1)=0."
+      ),
+
+      makeQuestion(
+        "basic",
+        "2 × 2 determinant",
+        `
+          Find
+          det
+          <span class="matrix display-matrix compact">
+            <table>
+              <tr><td>1</td><td>2</td></tr>
+              <tr><td>3</td><td>4</td></tr>
+            </table>
+          </span>.
+        `,
+        "−2",
+        ["2", "10", "−10"],
+        "The determinant is 1(4)−2(3)=−2."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Nonsingularity",
+        "When is a square matrix A nonsingular?",
+        "Exactly when det A ≠ 0",
+        [
+          "Exactly when det A = 0",
+          "Only when every entry is nonzero",
+          "Only when A is diagonal"
+        ],
+        "A square matrix is nonsingular if and only if its determinant is nonzero."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Geometric meaning",
+        "What is the area of the parallelogram formed by the two columns of a 2 × 2 matrix A?",
+        "|det A|",
+        ["det A²", "2 det A", "1/det A"],
+        "The absolute value of the determinant gives the area. The sign records orientation."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Zero determinant",
+        "What does det A = 0 imply about the columns of A?",
+        "They are linearly dependent",
+        [
+          "They are automatically orthogonal",
+          "Every column is zero",
+          "They form an identity matrix"
+        ],
+        "A zero determinant means the columns do not span the full space and are linearly dependent."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Triangular matrices",
+        "How is the determinant of a triangular matrix computed?",
+        "Multiply the entries on the main diagonal",
+        [
+          "Add the entries on the main diagonal",
+          "Multiply all entries of the matrix",
+          "Add all row sums"
+        ],
+        "The determinant of an upper or lower triangular matrix is the product of its diagonal entries."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Zero row or column",
+        "If a matrix has a row consisting entirely of zeros, what is its determinant?",
+        "0",
+        ["1", "−1", "It cannot be determined"],
+        "Expanding across the zero row gives a sum of zero terms."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Identity matrix",
+        "What is det(Iₙ)?",
+        "1",
+        ["0", "n", "−1"],
+        "The identity matrix is triangular with every diagonal entry equal to 1."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Orientation",
+        "What does a negative 2 × 2 determinant indicate geometrically?",
+        "The orientation has been reversed",
+        [
+          "The area must be negative",
+          "The matrix is singular",
+          "The columns are equal"
+        ],
+        "Area is |det A|. A negative sign indicates reversed orientation."
+      ),
+
+      makeQuestion(
+        "basic",
+        "Inverse",
+        "Which condition is required for A⁻¹ to exist?",
+        "det A ≠ 0",
+        ["det A = 0", "det A = 1 only", "A must be diagonal"],
+        "The inverse exists exactly when the square matrix is nonsingular."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Minor",
+        "How is Aᵢⱼ obtained from A?",
+        "Delete row i and column j",
+        [
+          "Delete only row i",
+          "Delete only column j",
+          "Interchange row i and column j"
+        ],
+        "The minor matrix Aᵢⱼ is formed by deleting the indicated row and column."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Cofactor signs",
+        "What is the sign of the cofactor C₁₂?",
+        "Negative",
+        ["Positive", "Always zero", "It depends on a₁₂"],
+        "The sign is (−1)¹⁺²=(−1)³=−1."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Cofactor",
+        "Which formula defines the cofactor Cᵢⱼ?",
+        "Cᵢⱼ = (−1)ⁱ⁺ʲ det Aᵢⱼ",
+        [
+          "Cᵢⱼ = det A + det Aᵢⱼ",
+          "Cᵢⱼ = aᵢⱼ det A",
+          "Cᵢⱼ = (−1)ⁱʲ det A"
+        ],
+        "A cofactor combines the minor determinant with the checkerboard sign."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Cofactor expansion",
+        "Along which rows or columns may a determinant be expanded?",
+        "Any row or any column",
+        [
+          "Only the first row",
+          "Only the main diagonal",
+          "Only a row containing a zero"
+        ],
+        "Cofactor expansion may be performed across any row or down any column."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Row replacement",
+        "What happens to det A when k times one row is added to another row?",
+        "It is unchanged",
+        [
+          "It is multiplied by k",
+          "Its sign changes",
+          "It always becomes zero"
+        ],
+        "A row replacement operation preserves the determinant."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Row scaling",
+        "One row is multiplied by k. How does the determinant change?",
+        "The determinant is multiplied by k",
+        [
+          "It is divided by k",
+          "It is unchanged",
+          "It is multiplied by kⁿ"
+        ],
+        "Scaling one row multiplies the determinant by the same scalar."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Row interchange",
+        "Two rows are interchanged. What happens to the determinant?",
+        "Its sign changes",
+        [
+          "It is unchanged",
+          "It becomes zero",
+          "It is squared"
+        ],
+        "A single row interchange multiplies the determinant by −1."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Column operations",
+        "Do the determinant rules for elementary row operations also hold for column operations?",
+        "Yes",
+        [
+          "No",
+          "Only for 2 × 2 matrices",
+          "Only for diagonal matrices"
+        ],
+        "The scaling, replacement and interchange rules also hold for columns."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Transpose",
+        "Which statement is true for every square matrix A?",
+        "det(Aᵀ) = det A",
+        [
+          "det(Aᵀ) = −det A",
+          "det(Aᵀ) = 1/det A",
+          "det(Aᵀ) = 0"
+        ],
+        "Taking the transpose does not change the determinant."
+      ),
+
+      makeQuestion(
+        "intermediate",
+        "Repeated rows",
+        "A square matrix has two equal rows. What is its determinant?",
+        "0",
+        ["1", "−1", "The sum of the equal rows"],
+        "Interchanging the equal rows leaves the matrix unchanged but should reverse the determinant, forcing it to be zero."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Product property",
+        "Which formula is correct?",
+        "det(AB) = det A · det B",
+        [
+          "det(AB) = det A + det B",
+          "det(AB) = det A − det B",
+          "det(AB) = det A / det B"
+        ],
+        "The determinant is multiplicative under matrix multiplication."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Scalar multiple",
+        "A is 4 × 4 and det A = 3. What is det(2A)?",
+        "48",
+        ["6", "24", "96"],
+        "det(2A)=2⁴det A=16(3)=48."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Matrix powers",
+        "If det A = 3, what is det(A³)?",
+        "27",
+        ["9", "6", "81"],
+        "det(A³)=(det A)³=3³=27."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Inverse determinant",
+        "If det A = 3, what is det(A⁻¹)?",
+        "1/3",
+        ["3", "−3", "1/9"],
+        "det(A⁻¹)=1/det A=1/3."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Transpose product",
+        "If det A = 3, what is det(AAᵀ)?",
+        "9",
+        ["3", "6", "27"],
+        "det(AAᵀ)=det A·det Aᵀ=(det A)²=9."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Adjugate",
+        "For an n × n matrix, which identity is correct?",
+        "A adj A = (det A)Iₙ",
+        [
+          "A adj A = Aᵀ",
+          "A adj A = Iₙ for every A",
+          "A adj A = 0 for every A"
+        ],
+        "The fundamental adjugate identity is A adj A = adj A · A = (det A)Iₙ."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Adjugate determinant",
+        "A is 4 × 4 and det A = 3. What is det(adj A)?",
+        "27",
+        ["3", "9", "81"],
+        "det(adj A)=(det A)ⁿ⁻¹=3³=27."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Inverse formula",
+        "Which is the adjugate formula for the inverse?",
+        "A⁻¹ = (1/det A) adj A",
+        [
+          "A⁻¹ = det A · adj A",
+          "A⁻¹ = Aᵀ/det A",
+          "A⁻¹ = adj A only"
+        ],
+        "When det A is nonzero, divide the adjugate by the determinant."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Cramer’s Rule",
+        "In Cramer’s Rule, how is xᵢ computed?",
+        "xᵢ = det Aᵢ(b) / det A",
+        [
+          "xᵢ = det A / det Aᵢ(b)",
+          "xᵢ = det A + det Aᵢ(b)",
+          "xᵢ = det Aᵢ(b)"
+        ],
+        "Aᵢ(b) is obtained by replacing column i of A by b."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Cramer’s Rule",
+        `
+          For the handout system
+          3x₁−2x₂=6 and −5x₁+4x₂=8,
+          what is x₁?
+        `,
+        "20",
+        ["27", "2", "40"],
+        "det A=2 and det A₁(b)=40, so x₁=40/2=20."
+      ),
+
+      makeQuestion(
+        "advanced",
+        "Cramer’s Rule",
+        "When is Cramer’s Rule guaranteed to give a unique solution?",
+        "When det A ≠ 0",
+        [
+          "When det A = 0",
+          "Whenever b is nonzero",
+          "Only for 2 × 2 systems"
+        ],
+        "Cramer’s Rule requires a nonsingular square coefficient matrix."
+      )
+    ];
+
+    const quizState = {
+      questions: [],
+      index: 0
+    };
+
+    function startQuiz() {
+      const level = byId("quizLevel").value;
+
+      let pool;
+
+      if (level === "mixed") {
+        pool = QUIZ_BANK;
+      } else if (level === "advanced") {
+        pool = QUIZ_BANK.filter(
+          question =>
+            question.level === "intermediate" ||
+            question.level === "advanced"
+        );
+      } else {
+        pool = QUIZ_BANK.filter(
+          question => question.level === level
+        );
+      }
+
+      const total = Math.min(10, pool.length);
+
+      quizState.questions =
+        shuffledCopy(pool)
+          .slice(0, total)
+          .map(question => ({
+            ...question,
+            options: shuffledCopy(
+              question.options.map(option => ({
+                ...option
+              }))
+            ),
+            selected: null,
+            checked: false
+          }));
+
+      quizState.index = 0;
+      renderQuiz();
+    }
+
+    function questionIsCorrect(question) {
+      return (
+        question.checked &&
+        question.selected !== null &&
+        question.options[question.selected].correct
+      );
+    }
+
+    function renderQuizSidebar() {
+      const total = quizState.questions.length;
+
+      const completed =
+        quizState.questions.filter(
+          question => question.checked
+        ).length;
+
+      const score =
+        quizState.questions.filter(
+          questionIsCorrect
+        ).length;
+
+      byId("quizScore").textContent =
+        `${score} / ${total}`;
+
+      byId("quizProgressText").textContent =
+        `${completed} of ${total} questions completed`;
+
+      byId("quizProgressBar").style.width =
+        `${total ? completed / total * 100 : 0}%`;
+
+      const topics = new Map();
+
+      for (const question of quizState.questions) {
+        if (!question.checked) continue;
+
+        if (!topics.has(question.topic)) {
+          topics.set(question.topic, {
+            correct: 0,
+            total: 0
+          });
+        }
+
+        const result = topics.get(question.topic);
+        result.total++;
+
+        if (questionIsCorrect(question)) {
+          result.correct++;
+        }
+      }
+
+      if (!topics.size) {
+        byId("quizTopicSummary").innerHTML = `
+          <div class="small-note">
+            Topic results appear after questions are answered.
+          </div>
+        `;
+
+        return;
+      }
+
+      byId("quizTopicSummary").innerHTML =
+        [...topics.entries()]
+          .map(([topic, result]) => `
+            <div class="topic-row">
+              <span>${escapeHTML(topic)}</span>
+              <strong>
+                ${result.correct}/${result.total}
+              </strong>
+            </div>
+          `).join("");
+    }
+
+    function renderQuizFinal() {
+      const total = quizState.questions.length;
+
+      const score =
+        quizState.questions.filter(
+          questionIsCorrect
+        ).length;
+
+      const percentage =
+        total
+          ? Math.round(score / total * 100)
+          : 0;
+
+      let heading;
+      let message;
+
+      if (percentage >= 90) {
+        heading = "Excellent work";
+        message =
+          "The determinant concepts are very well understood.";
+      } else if (percentage >= 70) {
+        heading = "Good progress";
+        message =
+          "Review the explanations for the questions that were missed.";
+      } else if (percentage >= 50) {
+        heading = "Developing understanding";
+        message =
+          "Revisit the cofactor and elementary-operation laboratories.";
+      } else {
+        heading = "Further review recommended";
+        message =
+          "Work through the interactive activities before attempting another test.";
+      }
+
+      byId("quizMain").innerHTML = `
+        <div class="quiz-final">
+          <div>
+            <div class="quiz-final-score">
+              ${percentage}%
+            </div>
+
+            <h3>${heading}</h3>
+
+            <p>
+              You answered ${score} out of ${total}
+              questions correctly. ${message}
+            </p>
+
+            <button
+              id="quizNewTest"
+              type="button"
+              class="button"
+            >
+              Try another randomized test
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQuiz() {
+      renderQuizSidebar();
+
+      if (
+        quizState.index >= quizState.questions.length
+      ) {
+        renderQuizFinal();
+        return;
+      }
+
+      const question =
+        quizState.questions[quizState.index];
+
+      const options =
+        question.options.map((option, index) => {
+          const selected =
+            question.selected === index;
+
+          let classes = "quiz-option";
+
+          if (selected) classes += " selected";
+
+          if (question.checked && option.correct) {
+            classes += " correct";
+          }
+
+          if (
+            question.checked &&
+            selected &&
+            !option.correct
+          ) {
+            classes += " wrong";
+          }
+
+          return `
+            <button
+              type="button"
+              class="${classes}"
+              data-quiz-option="${index}"
+              ${question.checked ? "disabled" : ""}
+            >
+              <span class="option-letter">
+                ${String.fromCharCode(65 + index)}
+              </span>
+
+              <span>${option.text}</span>
+            </button>
+          `;
+        }).join("");
+
+      const feedback =
+        question.checked
+          ? `
+            <div class="quiz-feedback ${
+              questionIsCorrect(question)
+                ? "good"
+                : "warn"
+            }">
+              <strong>
+                ${
+                  questionIsCorrect(question)
+                    ? "Correct."
+                    : "Not quite."
+                }
+              </strong>
+
+              ${question.explanation}
+            </div>
+          `
+          : "";
+
+      byId("quizMain").innerHTML = `
+        <div class="quiz-meta">
+          <span class="quiz-topic">
+            ${escapeHTML(question.topic)}
+          </span>
+
+          <span class="quiz-number">
+            Question ${quizState.index + 1}
+            of ${quizState.questions.length}
+          </span>
+        </div>
+
+        <div class="quiz-question">
+          ${question.question}
+        </div>
+
+        <div class="quiz-options">
+          ${options}
+        </div>
+
+        ${feedback}
+
+        <div class="quiz-actions">
+          ${
+            question.checked
+              ? `
+                <button
+                  id="quizNext"
+                  type="button"
+                  class="button"
+                >
+                  ${
+                    quizState.index ===
+                    quizState.questions.length - 1
+                      ? "View result"
+                      : "Next question"
+                  }
+                </button>
+              `
+              : `
+                <button
+                  id="quizCheck"
+                  type="button"
+                  class="button"
+                  ${
+                    question.selected === null
+                      ? "disabled"
+                      : ""
+                  }
+                >
+                  Check answer
+                </button>
+              `
+          }
+        </div>
+      `;
+    }
+
+    byId("quizMain").addEventListener(
+      "click",
+      event => {
+        const question =
+          quizState.questions[quizState.index];
+
+        const option =
+          event.target.closest("[data-quiz-option]");
+
+        if (
+          option &&
+          question &&
+          !question.checked
+        ) {
+          question.selected =
+            Number(option.dataset.quizOption);
+
+          renderQuiz();
+          return;
+        }
+
+        if (
+          event.target.closest("#quizCheck") &&
+          question &&
+          question.selected !== null
+        ) {
+          question.checked = true;
+          renderQuiz();
+          return;
+        }
+
+        if (event.target.closest("#quizNext")) {
+          quizState.index++;
+          renderQuiz();
+          return;
+        }
+
+        if (event.target.closest("#quizNewTest")) {
+          startQuiz();
+        }
+      }
+    );
+
+    byId("quizRestart").addEventListener(
+      "click",
+      startQuiz
+    );
+
+    /* ============================================================
+       INITIALISE
+    ============================================================ */
+
+    mountBasicEditor();
+    renderBasic();
+
+    mountCofactorEditor();
+    renderCofactor();
+
+    mountRowEditor();
+    refreshOperationSelectors();
+    renderRowLab();
+
+    renderPropertyCalculator();
+
+    mountAdjEditor();
+    renderAdjugate();
+
+    mountCramerEditors();
+    renderCramer();
+
+    renderComplexity();
+    startQuiz();
+  </script>
+</body>
+</html>
